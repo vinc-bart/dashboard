@@ -4,7 +4,7 @@ import { nextCookies } from "better-auth/next-js";
 import { admin, twoFactor } from "better-auth/plugins";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { sendEmail } from "@/lib/email";
+import { logDevSignInCode, sendEmail } from "@/lib/email";
 import { withLocaleInAbsoluteUrl } from "@/i18n/path";
 import { mailLocale } from "@/lib/email/locale";
 import { changeEmailMail, otpMail, resetPasswordMail, verificationMail } from "@/lib/email/templates";
@@ -96,6 +96,7 @@ export const auth = betterAuth({
       otpOptions: {
         storeOTP: "hashed",
         sendOTP: async ({ user, otp }) => {
+          logDevSignInCode(user.email, otp);
           const mail = otpMail(otp, await mailLocale());
           await sendEmail({ to: user.email, ...mail });
         },
