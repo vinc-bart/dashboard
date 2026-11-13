@@ -1,7 +1,8 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   assertMailerConfig,
   emailFrom,
+  logDevSignInCode,
   resolveMailerProvider,
   smtpOptions,
 } from "./email";
@@ -56,6 +57,26 @@ describe("smtpOptions", () => {
       port: 2525,
       secure: false,
     });
+  });
+});
+
+describe("logDevSignInCode", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("prints the code in development", () => {
+    const info = vi.spyOn(console, "info").mockImplementation(() => {});
+    logDevSignInCode("you@example.com", "123456", "development");
+    expect(info).toHaveBeenCalledWith("[dev] Sign-in code for you@example.com: 123456");
+  });
+
+  it("stays silent outside development", () => {
+    const info = vi.spyOn(console, "info").mockImplementation(() => {});
+    logDevSignInCode("you@example.com", "123456", "production");
+    logDevSignInCode("you@example.com", "123456", "test");
+    logDevSignInCode("you@example.com", "123456", undefined);
+    expect(info).not.toHaveBeenCalled();
   });
 });
 

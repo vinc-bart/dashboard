@@ -100,6 +100,16 @@ async function sendWithResend(input: SendEmailInput) {
   }
 }
 
+/** Dev-server convenience. Production never prints the sign-in code. */
+export function logDevSignInCode(
+  email: string,
+  otp: string,
+  nodeEnv: string | undefined = process.env.NODE_ENV,
+) {
+  if (nodeEnv !== "development") return;
+  console.info(`[dev] Sign-in code for ${email}: ${otp}`);
+}
+
 export async function sendEmail(input: SendEmailInput): Promise<void> {
   const provider = resolveMailerProvider();
   if (provider === "resend") {
