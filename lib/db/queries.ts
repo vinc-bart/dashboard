@@ -174,7 +174,7 @@ export async function getAdminStats() {
           verified: sql<number>`sum(case when ${user.emailVerified} = 1 then 1 else 0 end)`,
         })
         .from(user),
-      // Use column helpers so Dates bind correctly (raw sql`${date}` is not bindable by better-sqlite3).
+      // Use column helpers so Dates bind correctly (raw sql`${date}` is not bindable).
       db
         .select({ value: count() })
         .from(user)

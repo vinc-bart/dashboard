@@ -5,15 +5,17 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "postbuild": "cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/ && node scripts/copy-newrelic-standalone.mjs",
+    "postbuild": "node scripts/postbuild-standalone.mjs",
     "start": "node .next/standalone/server.js",
     "lint": "eslint",
     "test": "vitest run",
     "test:e2e": "playwright test",
     "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
     "db:seed-demo": "node scripts/seed-admin-demo.mjs"
   },
   "dependencies": {
+    "@libsql/client": "^0.18.0",
     "@sentry/nextjs": "^11.12.0",
     "@tanstack/react-query": "^5.107.1",
     "better-auth": "^1.7.19",

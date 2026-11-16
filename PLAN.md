@@ -4,7 +4,7 @@ Yes: **one private page per theme** is the right split. Vélib’ is live and po
 
 The app is French-first (the source data is French). UI chrome is available in **French, English and Spanish**, with always-on URL prefixes (`/fr`, `/en`, `/es`; default `fr`). Open Data record values stay in the source language. Source links go back to [opendata.paris.fr](https://opendata.paris.fr) and [data.montreuil.fr](https://data.montreuil.fr).
 
-Live: [dashboard.vvbb.fr](https://dashboard.vvbb.fr). Hosting: Railway (SQLite volume). Schema: Drizzle migrations in `lib/db/migrations`, applied at runtime (not during `next build`).
+Live: [dashboard.vvbb.fr](https://dashboard.vvbb.fr). Hosting: Vercel + Turso. Schema: Drizzle migrations in `lib/db/migrations`, applied on boot for the local SQLite file and via `pnpm db:migrate` for Turso (not during `next build`).
 
 ## Product shape
 
@@ -47,7 +47,7 @@ Each theme page follows the same layout: KPI strip, map and/or chart, searchable
 ## Stack
 
 - **Auth:** [Better Auth](https://www.better-auth.com/) (email/password + verification + email OTP)
-- **DB:** SQLite via Drizzle (`better-sqlite3`), file at `$DATA_DIR/dashboard.sqlite` (default `data/`, gitignored). Migrations at runtime, not during `next build`.
+- **DB:** SQLite via Drizzle (`@libsql/client`). Local file at `$DATA_DIR/dashboard.sqlite` (default `data/`, gitignored), or Turso when `TURSO_DATABASE_URL` is set. File migrations run at runtime; Turso migrations run via `pnpm db:migrate`. Neither runs during `next build`.
 - **Route protection:** Next.js 16 [`proxy.ts`](https://nextjs.org/docs/app/api-reference/file-conventions/proxy) (not `middleware.ts`) composing [next-intl](https://next-intl.dev/) with a session cookie check on `/[locale]/dashboard/*`; still re-check session in server code
 - **i18n:** next-intl App Router, locales `fr` | `en` | `es`, `localePrefix: "always"`. Messages in `messages/*.json`. APIs stay at `/api/*`.
 - **Maps:** Leaflet + OSM (no API key). Trees/chantiers fetched by **bounding box**, never all 200k trees at once
