@@ -8,16 +8,24 @@ import type { MapMarker } from "@/lib/opendata/markers";
 import { useHtmlDark } from "@/components/theme/use-html-dark";
 import "leaflet/dist/leaflet.css";
 
+const CARTO_ATTRIBUTION =
+  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
+
+/** Public by design: Leaflet requests tiles from the browser, so the key is in the tile URL. */
+function cartoTileUrl(style: "light_all" | "dark_all"): string {
+  const key = process.env.NEXT_PUBLIC_CARTO_API_KEY?.trim();
+  const query = key ? `?key=${encodeURIComponent(key)}` : "";
+  return `https://{s}.basemaps.cartocdn.com/${style}/{z}/{x}/{y}{r}.png${query}`;
+}
+
 const LIGHT_TILES = {
-  url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-  attribution:
-    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+  url: cartoTileUrl("light_all"),
+  attribution: CARTO_ATTRIBUTION,
 };
 
 const DARK_TILES = {
-  url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-  attribution:
-    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+  url: cartoTileUrl("dark_all"),
+  attribution: CARTO_ATTRIBUTION,
 };
 
 function MapBounds({

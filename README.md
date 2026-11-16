@@ -14,7 +14,7 @@ docker compose up -d mailpit
 cp .env.example .env.local
 ```
 
-Set `BETTER_AUTH_SECRET` in `.env.local` (`openssl rand -base64 32`). Keep `MAILER_PROVIDER=mailpit`. Then:
+Set `BETTER_AUTH_SECRET` in `.env.local` (`openssl rand -base64 32`). Keep `MAILER_PROVIDER=mailpit`. For the map, paste the same free CARTO key into `NEXT_PUBLIC_CARTO_API_KEY` (see Production). Then:
 
 ```bash
 pnpm dev
@@ -74,6 +74,7 @@ GitHub Actions secrets (same values as the portfolio / under-construction FTP ac
 | `FTP_HOST` | OVH FTP host |
 | `FTP_USERNAME` | FTP login |
 | `FTP_PASSWORD` | FTP password |
+| `NEXT_PUBLIC_CARTO_API_KEY` | same CARTO key as Vercel; inlined when the static demo is built |
 
 Push to `demo` to rebuild and upload. Uptime and alert crons stay pointed at **dashboard.vvbb.fr**.
 
@@ -106,6 +107,7 @@ Local, CI, and the Docker image still use a SQLite file. The image entrypoint `c
    | `SENTRY_PROJECT` | optional; defaults to `paris-ouverte` for source maps |
    | `NEW_RELIC_LICENSE_KEY` | optional; leave empty on Vercel (the agent expects a long-lived process) |
    | `HEALTHCHECKS_PING_URL` | optional; healthchecks.io ping URL for the alerts cron |
+   | `NEXT_PUBLIC_CARTO_API_KEY` | free CARTO basemap key ([request](https://carto.com/basemaps/apikey/)); same value as `.env.local`. Inlined at build time — redeploy after setting it |
 
    Empty observability variables leave each tool disabled. The app builds and runs without them. `DATA_DIR` is unused when `TURSO_DATABASE_URL` is set.
 

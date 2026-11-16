@@ -50,7 +50,7 @@ Each theme page follows the same layout: KPI strip, map and/or chart, searchable
 - **DB:** SQLite via Drizzle (`@libsql/client`). Local file at `$DATA_DIR/dashboard.sqlite` (default `data/`, gitignored), or Turso when `TURSO_DATABASE_URL` is set. File migrations run at runtime; Turso migrations run via `pnpm db:migrate`. Neither runs during `next build`.
 - **Route protection:** Next.js 16 [`proxy.ts`](https://nextjs.org/docs/app/api-reference/file-conventions/proxy) (not `middleware.ts`) composing [next-intl](https://next-intl.dev/) with a session cookie check on `/[locale]/dashboard/*`; still re-check session in server code
 - **i18n:** next-intl App Router, locales `fr` | `en` | `es`, `localePrefix: "always"`. Messages in `messages/*.json`. APIs stay at `/api/*`.
-- **Maps:** Leaflet + OSM (no API key). Trees/chantiers fetched by **bounding box**, never all 200k trees at once
+- **Maps:** Leaflet + CARTO basemaps (`NEXT_PUBLIC_CARTO_API_KEY`, free key from [carto.com/basemaps/apikey](https://carto.com/basemaps/apikey/)). Trees/chantiers fetched by **bounding box**, never all 200k trees at once
 - **Charts:** Recharts
 - **Client data:** TanStack Query for dashboard browser refetches (bbox map, live Vélib', search, favorites, alerts, events)
 - **UI:** Tailwind 4 + small shared primitives (button, input, card, table)
