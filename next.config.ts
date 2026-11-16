@@ -29,7 +29,8 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  output: "standalone",
+  // Docker copies `.next/standalone`. Vercel builds its own output and fails if this is set.
+  ...(process.env.VERCEL ? {} : { output: "standalone" as const }),
   serverExternalPackages: ["newrelic"],
   outputFileTracingIncludes: {
     "/*": [
