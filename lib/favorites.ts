@@ -45,26 +45,23 @@ export async function toggleFavoriteForUser(
         label: parsed.label,
       });
     } else {
-      const inserted = db.transaction((tx) => {
-        const total = tx
+      const inserted = await db.transaction(async (tx) => {
+        const total = await tx
           .select({ n: count() })
           .from(favorite)
-          .where(eq(favorite.userId, userId))
-          .all();
-        if (isAtFavoriteLimit(total[0]?.n ?? 0)) {
+          .where(eq(favorite.userId, userId));
+        if (isAtFavoriteLimit(Number(total[0]?.n ?? 0))) {
           return { ok: false as const, error: "favoriteLimit" as const };
         }
-        tx.insert(favorite)
-          .values({
-            id: crypto.randomUUID(),
-            userId,
-            datasetId: parsed.datasetId,
-            recordId: parsed.recordId,
-            label: parsed.label,
-            geo: parsed.geo,
-            createdAt: new Date(),
-          })
-          .run();
+        await tx.insert(favorite).values({
+          id: crypto.randomUUID(),
+          userId,
+          datasetId: parsed.datasetId,
+          recordId: parsed.recordId,
+          label: parsed.label,
+          geo: parsed.geo,
+          createdAt: new Date(),
+        });
         return { ok: true as const };
       });
       if (!inserted.ok) {

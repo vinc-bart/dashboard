@@ -29,11 +29,11 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  output: "standalone",
-  serverExternalPackages: ["better-sqlite3", "newrelic"],
+  // Docker copies `.next/standalone`. Vercel builds its own output and fails if this is set.
+  ...(process.env.VERCEL ? {} : { output: "standalone" as const }),
+  serverExternalPackages: ["newrelic"],
   outputFileTracingIncludes: {
     "/*": [
-      "./node_modules/better-sqlite3/**/*",
       // Package files only. Dependencies are copied by scripts/copy-newrelic-standalone.mjs.
       "./node_modules/newrelic/**/*",
       "./lib/db/migrations/**/*",
