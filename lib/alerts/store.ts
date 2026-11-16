@@ -24,15 +24,15 @@ export function listEnabledAlertRules() {
   return db.select().from(alertRule).where(eq(alertRule.enabled, true));
 }
 
-export function createAlertRule(input: {
+export async function createAlertRule(input: {
   userId: string;
   datasetId: string;
   recordId: string;
   label: string;
   threshold: number;
-}): CreateAlertResult {
-  return db.transaction((tx) => {
-    const existing = tx
+}): Promise<CreateAlertResult> {
+  return db.transaction(async (tx) => {
+    const existing = await tx
       .select()
       .from(alertRule)
       .where(
@@ -43,45 +43,41 @@ export function createAlertRule(input: {
           eq(alertRule.metric, "bikes_below"),
         ),
       )
-      .limit(1)
-      .all();
+      .limit(1);
 
     if (existing[0]) {
-      tx.update(alertRule)
+      await tx
+        .update(alertRule)
         .set({
           label: input.label,
           threshold: input.threshold,
           enabled: true,
         })
-        .where(eq(alertRule.id, existing[0].id))
-        .run();
+        .where(eq(alertRule.id, existing[0].id));
       return { ok: true as const, id: existing[0].id };
     }
 
-    const total = tx
+    const total = await tx
       .select({ n: count() })
       .from(alertRule)
-      .where(eq(alertRule.userId, input.userId))
-      .all();
-    if ((total[0]?.n ?? 0) >= ALERT_MAX_PER_USER) {
+      .where(eq(alertRule.userId, input.userId));
+    if (Number(total[0]?.n ?? 0) >= ALERT_MAX_PER_USER) {
       return { ok: false as const, error: "limit" as const };
     }
 
     const id = crypto.randomUUID();
-    tx.insert(alertRule)
-      .values({
-        id,
-        userId: input.userId,
-        datasetId: input.datasetId,
-        recordId: input.recordId,
-        label: input.label,
-        metric: "bikes_below",
-        threshold: input.threshold,
-        enabled: true,
-        lastTriggeredAt: null,
-        createdAt: new Date(),
-      })
-      .run();
+    await tx.insert(alertRule).values({
+      id,
+      userId: input.userId,
+      datasetId: input.datasetId,
+      recordId: input.recordId,
+      label: input.label,
+      metric: "bikes_below",
+      threshold: input.threshold,
+      enabled: true,
+      lastTriggeredAt: null,
+      createdAt: new Date(),
+    });
     return { ok: true as const, id };
   });
 }

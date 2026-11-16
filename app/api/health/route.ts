@@ -3,9 +3,9 @@ import { checkDatabase } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
-export function GET() {
+export async function GET() {
   try {
-    checkDatabase();
+    await checkDatabase();
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ ok: false }, { status: 503 });
