@@ -29,10 +29,10 @@ export default async function AdminMessagesPage() {
           <p className="text-sm text-muted">{t("messages.empty")}</p>
         </Card>
       ) : (
-        <ul className="space-y-4">
+        <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {messages.map((row) => (
-            <li key={row.id}>
-              <Card className="space-y-3">
+            <li key={row.id} className="min-w-0">
+              <Card className="flex h-full flex-col gap-3">
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
                   <div>
                     <p className="font-medium text-heading">{row.name}</p>
