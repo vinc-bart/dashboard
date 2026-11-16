@@ -1,7 +1,7 @@
 import type { Transporter } from "nodemailer";
 import type { Resend } from "resend";
 
-export type MailerProvider = "mailpit" | "resend";
+export type MailerProvider = "mailpit" | "resend" | "console";
 
 export type SendEmailInput = {
   to: string;
@@ -14,7 +14,9 @@ export type SendEmailInput = {
 export function resolveMailerProvider(
   value: string | undefined = process.env.MAILER_PROVIDER,
 ): MailerProvider {
-  return value === "resend" ? "resend" : "mailpit";
+  const provider = value?.trim();
+  if (provider === "resend" || provider === "console") return provider;
+  return "mailpit";
 }
 
 export function emailFrom(value: string | undefined = process.env.EMAIL_FROM): string {
@@ -100,6 +102,18 @@ async function sendWithResend(input: SendEmailInput) {
   }
 }
 
+/** Dev-server convenience. Prints the message instead of opening an SMTP connection. */
+export function logConsoleEmail(
+  input: SendEmailInput,
+  nodeEnv: string | undefined = process.env.NODE_ENV,
+) {
+  if (nodeEnv === "production") {
+    throw new Error("MAILER_PROVIDER=console is not available in production");
+  }
+  const reply = input.replyTo ? `\nReply-To: ${input.replyTo}` : "";
+  console.info(`[mail] To: ${input.to}\nSubject: ${input.subject}${reply}\n\n${input.text}`);
+}
+
 /** Dev-server convenience. Production never prints the sign-in code. */
 export function logDevSignInCode(
   email: string,
@@ -110,8 +124,14 @@ export function logDevSignInCode(
   console.info(`[dev] Sign-in code for ${email}: ${otp}`);
 }
 
-export async function sendEmail(input: SendEmailInput): Promise<void> {
-  const provider = resolveMailerProvider();
+export async function sendEmail(
+  input: SendEmailInput,
+  provider: MailerProvider = resolveMailerProvider(),
+): Promise<void> {
+  if (provider === "console") {
+    logConsoleEmail(input);
+    return;
+  }
   if (provider === "resend") {
     await sendWithResend(input);
     return;
