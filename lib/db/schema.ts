@@ -161,6 +161,7 @@ export const contactMessage = sqliteTable(
     id: text("id").primaryKey(),
     name: text("name").notNull(),
     email: text("email").notNull(),
+    topic: text("topic"),
     message: text("message").notNull(),
     locale: text("locale").notNull(),
     emailSent: integer("email_sent", { mode: "boolean" }).notNull().default(false),

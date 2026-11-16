@@ -4,9 +4,14 @@ import { FormEvent, useState } from "react";
 import { useTranslations } from "next-intl";
 import { submitContact } from "@/lib/actions/contact";
 import { formString } from "@/lib/safe-string";
-import { CONTACT_EMAIL_MAX, CONTACT_MESSAGE_MAX, CONTACT_NAME_MAX } from "@/lib/contact";
+import {
+  CONTACT_EMAIL_MAX,
+  CONTACT_MESSAGE_MAX,
+  CONTACT_NAME_MAX,
+  CONTACT_TOPICS,
+} from "@/lib/contact";
 import { Button } from "@/components/ui/button";
-import { Input, Label, Textarea } from "@/components/ui/input";
+import { Input, Label, Select, Textarea } from "@/components/ui/input";
 
 export function ContactForm() {
   const t = useTranslations("Contact");
@@ -23,6 +28,7 @@ export function ContactForm() {
       const result = await submitContact({
         name: formString(form, "name"),
         email: formString(form, "email"),
+        topic: formString(form, "topic"),
         message: formString(form, "message"),
         website: formString(form, "website"),
       });
@@ -67,13 +73,26 @@ export function ContactForm() {
         />
       </div>
       <div>
+        <Label htmlFor="topic">{t("topic")}</Label>
+        <Select id="topic" name="topic" required defaultValue="">
+          <option value="" disabled>
+            {t("topicPlaceholder")}
+          </option>
+          {CONTACT_TOPICS.map((topic) => (
+            <option key={topic} value={topic}>
+              {t(`topics.${topic}`)}
+            </option>
+          ))}
+        </Select>
+      </div>
+      <div>
         <Label htmlFor="message">{t("message")}</Label>
         <Textarea id="message" name="message" required maxLength={CONTACT_MESSAGE_MAX} rows={6} />
       </div>
-      <div className="absolute left-[-9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
+      {/* <div className="absolute left-[-9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
         <label htmlFor="website">Website</label>
         <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
-      </div>
+      </div> */}
       {error ? <p role="alert" className="text-sm text-danger">{error}</p> : null}
       <Button type="submit" className="w-full" disabled={pending}>
         {pending ? t("pending") : t("submit")}

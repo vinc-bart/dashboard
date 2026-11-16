@@ -42,6 +42,9 @@
     "favorites": "Favorites",
     "profile": "Profile",
     "admin": "Admin",
+    "messages": "Messages",
+    "contactForm": "Form",
+    "contactMessages": "Latest messages",
     "logout": "Sign out",
     "logoutShort": "Leave",
     "privateSpace": "Private area",
@@ -58,6 +61,13 @@
     "body": "A question, a report, or an idea for Paris Ouverte? Write to us.",
     "name": "Name",
     "email": "Email",
+    "topic": "Topic",
+    "topicPlaceholder": "Choose a topic",
+    "topics": {
+      "question": "Question",
+      "report": "Report",
+      "idea": "Idea"
+    },
     "message": "Message",
     "submit": "Send",
     "pending": "Sending…",
@@ -70,6 +80,8 @@
     "emailRequired": "Please enter your email.",
     "emailInvalid": "This email is not valid.",
     "emailTooLong": "The email is too long.",
+    "topicRequired": "Please choose a topic.",
+    "topicInvalid": "This topic is not valid.",
     "messageRequired": "Please write a message.",
     "messageTooLong": "The message is too long."
   },
@@ -420,7 +432,7 @@
     "alertText": "Station {station}: {bikes} bike(s) (threshold {threshold}). {url}",
     "contactSubject": "Paris Ouverte contact · {name}",
     "contactPreview": "Message from {name}.",
-    "contactBody": "{name} ({email}) wrote via the contact form (locale {locale}):"
+    "contactBody": "{name} ({email}) wrote via the contact form, topic “{topic}” (locale {locale}):"
   },
   "Datasets": {
     "velib": {

@@ -14,7 +14,7 @@ docker compose up -d mailpit
 cp .env.example .env.local
 ```
 
-Set `BETTER_AUTH_SECRET` in `.env.local` (`openssl rand -base64 32`). Keep `MAILER_PROVIDER=mailpit`. For the map, paste the same free CARTO key into `NEXT_PUBLIC_CARTO_API_KEY` (see Production). Then:
+Set `BETTER_AUTH_SECRET` in `.env.local` (`openssl rand -base64 32`). Keep `MAILER_PROVIDER=mailpit`, or set `MAILER_PROVIDER=console` to print mail in the dev terminal instead of starting Docker. For the map, paste the same free CARTO key into `NEXT_PUBLIC_CARTO_API_KEY` (see Production). Then:
 
 ```bash
 pnpm dev

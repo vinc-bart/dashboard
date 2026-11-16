@@ -2,8 +2,10 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   assertMailerConfig,
   emailFrom,
+  logConsoleEmail,
   logDevSignInCode,
   resolveMailerProvider,
+  sendEmail,
   smtpOptions,
 } from "./email";
 import {
@@ -26,6 +28,11 @@ describe("resolveMailerProvider", () => {
 
   it("selects resend when requested", () => {
     expect(resolveMailerProvider("resend")).toBe("resend");
+  });
+
+  it("selects the console logger when requested", () => {
+    expect(resolveMailerProvider("console")).toBe("console");
+    expect(resolveMailerProvider("  console  ")).toBe("console");
   });
 });
 
@@ -80,9 +87,42 @@ describe("logDevSignInCode", () => {
   });
 });
 
+describe("logConsoleEmail", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  const message = {
+    to: "hello@localhost",
+    subject: "Contact",
+    text: "Bonjour",
+    html: "<p>Bonjour</p>",
+    replyTo: "ada@example.com",
+  };
+
+  it("prints the message outside production", () => {
+    const info = vi.spyOn(console, "info").mockImplementation(() => {});
+    logConsoleEmail(message, "development");
+    expect(info).toHaveBeenCalledWith(
+      "[mail] To: hello@localhost\nSubject: Contact\nReply-To: ada@example.com\n\nBonjour",
+    );
+  });
+
+  it("refuses to swallow mail in production", () => {
+    expect(() => logConsoleEmail(message, "production")).toThrow(/not available in production/);
+  });
+
+  it("is what sendEmail uses for the console provider", async () => {
+    const info = vi.spyOn(console, "info").mockImplementation(() => {});
+    await sendEmail(message, "console");
+    expect(info).toHaveBeenCalledOnce();
+  });
+});
+
 describe("assertMailerConfig", () => {
-  it("ignores mailpit", () => {
+  it("ignores mailpit and console", () => {
     expect(() => assertMailerConfig({ MAILER_PROVIDER: "mailpit" })).not.toThrow();
+    expect(() => assertMailerConfig({ MAILER_PROVIDER: "console" })).not.toThrow();
   });
 
   it("requires key and sender for resend", () => {
@@ -150,6 +190,7 @@ describe("mail templates", () => {
     const mail = contactMail({
       name: "Ada <Lovelace>",
       email: "ada@example.com",
+      topic: "Question",
       message: "Hello\n<script>x</script>",
       locale: "fr",
     });
@@ -164,9 +205,12 @@ describe("mail templates", () => {
     const mail = contactMail({
       name: "Ada\r\nBcc: evil@example.com",
       email: "ada@example.com",
+      topic: "Question\r\nBcc: evil@example.com",
       message: "hi",
       locale: "fr",
     });
+    expect(mail.text).not.toMatch(/[\r\n].*Bcc/);
+    expect(mail.text).toContain("Question Bcc: evil@example.com");
     expect(mail.subject).not.toMatch(/[\r\n]/);
     expect(mail.subject).toBe("Contact Paris Ouverte · Ada Bcc: evil@example.com");
     expect(stripHeaderBreaks("a\rb\nc")).toBe("a b c");

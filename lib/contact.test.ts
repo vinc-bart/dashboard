@@ -11,6 +11,7 @@ describe("parseContactFields", () => {
   const valid = {
     name: "Ada Lovelace",
     email: "ada@example.com",
+    topic: "question",
     message: "Bonjour, j’ai une question.",
   };
 
@@ -39,6 +40,14 @@ describe("parseContactFields", () => {
       ok: false,
       error: "messageRequired",
     });
+    expect(parseContactFields({ ...valid, topic: "" })).toEqual({
+      ok: false,
+      error: "topicRequired",
+    });
+    expect(parseContactFields({ ...valid, topic: "spam" })).toEqual({
+      ok: false,
+      error: "topicInvalid",
+    });
   });
 
   it("rejects oversized fields", () => {
@@ -58,6 +67,7 @@ describe("parseContactFields", () => {
     const result = parseContactFields({
       name: "  Ada  ",
       email: "  ada@example.com  ",
+      topic: "  idea  ",
       message: "  Hello  ",
     });
     expect(result).toEqual({
@@ -65,6 +75,7 @@ describe("parseContactFields", () => {
       honeypot: false,
       name: "Ada",
       email: "ada@example.com",
+      topic: "idea",
       message: "Hello",
     });
   });

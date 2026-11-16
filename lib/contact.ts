@@ -1,6 +1,13 @@
 export const CONTACT_NAME_MAX = 80;
 export const CONTACT_EMAIL_MAX = 254;
 export const CONTACT_MESSAGE_MAX = 4000;
+export const CONTACT_TOPICS = ["question", "report", "idea"] as const;
+
+export type ContactTopic = (typeof CONTACT_TOPICS)[number];
+
+export function isContactTopic(value: string): value is ContactTopic {
+  return (CONTACT_TOPICS as readonly string[]).includes(value);
+}
 
 function isValidEmail(value: string) {
   const at = value.indexOf("@");
@@ -27,6 +34,8 @@ export type ContactValidationError =
   | "emailRequired"
   | "emailInvalid"
   | "emailTooLong"
+  | "topicRequired"
+  | "topicInvalid"
   | "messageRequired"
   | "messageTooLong";
 
@@ -37,6 +46,7 @@ export type ContactValidationResult =
       honeypot: false;
       name: string;
       email: string;
+      topic: ContactTopic;
       message: string;
     }
   | { ok: false; error: ContactValidationError };
@@ -44,6 +54,7 @@ export type ContactValidationResult =
 export function parseContactFields(input: {
   name: string;
   email: string;
+  topic: string;
   message: string;
   website?: string;
 }): ContactValidationResult {
@@ -54,6 +65,7 @@ export function parseContactFields(input: {
 
   const name = input.name.trim();
   const email = input.email.trim();
+  const topic = input.topic.trim();
   const message = input.message.trim();
 
   if (!name) return { ok: false, error: "nameRequired" };
@@ -61,10 +73,12 @@ export function parseContactFields(input: {
   if (!email) return { ok: false, error: "emailRequired" };
   if (email.length > CONTACT_EMAIL_MAX) return { ok: false, error: "emailTooLong" };
   if (!isValidEmail(email)) return { ok: false, error: "emailInvalid" };
+  if (!topic) return { ok: false, error: "topicRequired" };
+  if (!isContactTopic(topic)) return { ok: false, error: "topicInvalid" };
   if (!message) return { ok: false, error: "messageRequired" };
   if (message.length > CONTACT_MESSAGE_MAX) return { ok: false, error: "messageTooLong" };
 
-  return { ok: true, honeypot: false, name, email, message };
+  return { ok: true, honeypot: false, name, email, topic, message };
 }
 
 export function clientIpFromHeaders(headerStore: Headers): string {

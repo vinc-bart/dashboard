@@ -42,6 +42,9 @@
     "favorites": "Favoris",
     "profile": "Profil",
     "admin": "Admin",
+    "messages": "Messages",
+    "contactForm": "Formulaire",
+    "contactMessages": "Derniers messages",
     "logout": "Se déconnecter",
     "logoutShort": "Sortir",
     "privateSpace": "Espace privé",
@@ -58,6 +61,13 @@
     "body": "Une question, un signalement ou une idée pour Paris Ouverte ? Écrivez-nous.",
     "name": "Nom",
     "email": "E-mail",
+    "topic": "Sujet",
+    "topicPlaceholder": "Choisir un sujet",
+    "topics": {
+      "question": "Question",
+      "report": "Signalement",
+      "idea": "Idée"
+    },
     "message": "Message",
     "submit": "Envoyer",
     "pending": "Envoi…",
@@ -70,6 +80,8 @@
     "emailRequired": "Indiquez votre e-mail.",
     "emailInvalid": "Cet e-mail n’est pas valide.",
     "emailTooLong": "L’e-mail est trop long.",
+    "topicRequired": "Choisissez un sujet.",
+    "topicInvalid": "Ce sujet n’est pas valide.",
     "messageRequired": "Écrivez un message.",
     "messageTooLong": "Le message est trop long."
   },
@@ -420,7 +432,7 @@
     "alertText": "Station {station} : {bikes} vélo(s) (seuil {threshold}). {url}",
     "contactSubject": "Contact Paris Ouverte · {name}",
     "contactPreview": "Message de {name}.",
-    "contactBody": "{name} ({email}) a écrit via le formulaire de contact (locale {locale}) :"
+    "contactBody": "{name} ({email}) a écrit via le formulaire de contact, sujet « {topic} » (locale {locale}) :"
   },
   "Datasets": {
     "velib": {
