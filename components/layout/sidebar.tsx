@@ -27,6 +27,52 @@ const mobileLinkClass = (active: boolean) =>
     active ? "border-accent text-white" : "border-transparent bg-white/5 text-white/80"
   }`;
 
+const ADMIN_MESSAGE_LINKS = [
+  { href: "/contact", id: "contactForm" },
+  { href: "/dashboard/admin/messages", id: "contactMessages" },
+] as const;
+
+function adminSectionActive(pathname: string) {
+  return (
+    pathname.startsWith("/dashboard/admin") && !pathname.startsWith("/dashboard/admin/messages")
+  );
+}
+
+function messageLinkActive(pathname: string, href: string) {
+  if (href === "/contact") return pathname === "/contact";
+  return pathname.startsWith(href);
+}
+
+function AdminMessageLinks({
+  pathname,
+  itemClass,
+  labelClass,
+}: Readonly<{
+  pathname: string;
+  itemClass: (active: boolean) => string;
+  labelClass: string;
+}>) {
+  const t = useTranslations("Nav");
+  return (
+    <>
+      <p className={labelClass}>{t("messages")}</p>
+      {ADMIN_MESSAGE_LINKS.map((item) => {
+        const active = messageLinkActive(pathname, item.href);
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            aria-current={active ? "page" : undefined}
+            className={itemClass(active)}
+          >
+            {t(item.id)}
+          </Link>
+        );
+      })}
+    </>
+  );
+}
+
 function useLogout() {
   const router = useRouter();
   return async () => {
@@ -108,13 +154,20 @@ export function Sidebar({
           );
         })}
         {isAdmin ? (
-          <Link
-            href="/dashboard/admin"
-            aria-current={pathname.startsWith("/dashboard/admin") ? "page" : undefined}
-            className={linkClass(pathname.startsWith("/dashboard/admin"))}
-          >
-            {t("admin")}
-          </Link>
+          <>
+            <Link
+              href="/dashboard/admin"
+              aria-current={adminSectionActive(pathname) ? "page" : undefined}
+              className={linkClass(adminSectionActive(pathname))}
+            >
+              {t("admin")}
+            </Link>
+            <AdminMessageLinks
+              pathname={pathname}
+              itemClass={linkClass}
+              labelClass="px-3 pb-1 pt-4 text-xs font-medium text-white/50"
+            />
+          </>
         ) : null}
       </nav>
       <div className="space-y-2 p-3">
@@ -182,13 +235,20 @@ export function MobileNav({
           );
         })}
         {isAdmin ? (
-          <Link
-            href="/dashboard/admin"
-            aria-current={pathname.startsWith("/dashboard/admin") ? "page" : undefined}
-            className={mobileLinkClass(pathname.startsWith("/dashboard/admin"))}
-          >
-            {t("admin")}
-          </Link>
+          <>
+            <Link
+              href="/dashboard/admin"
+              aria-current={adminSectionActive(pathname) ? "page" : undefined}
+              className={mobileLinkClass(adminSectionActive(pathname))}
+            >
+              {t("admin")}
+            </Link>
+            <AdminMessageLinks
+              pathname={pathname}
+              itemClass={mobileLinkClass}
+              labelClass="shrink-0 self-center px-2 text-xs text-white/50"
+            />
+          </>
         ) : null}
       </nav>
       <p className="sr-only">{userName}</p>

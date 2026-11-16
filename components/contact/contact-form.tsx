@@ -70,10 +70,10 @@ export function ContactForm() {
         <Label htmlFor="message">{t("message")}</Label>
         <Textarea id="message" name="message" required maxLength={CONTACT_MESSAGE_MAX} rows={6} />
       </div>
-      <div className="absolute left-[-9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
+      {/* <div className="absolute left-[-9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
         <label htmlFor="website">Website</label>
         <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
-      </div>
+      </div> */}
       {error ? <p role="alert" className="text-sm text-danger">{error}</p> : null}
       <Button type="submit" className="w-full" disabled={pending}>
         {pending ? t("pending") : t("submit")}
