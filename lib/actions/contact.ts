@@ -16,6 +16,7 @@ export type ContactSubmitResult = { ok: true } | { ok: false; error: string };
 export async function submitContact(input: {
   name: string;
   email: string;
+  topic: string;
   message: string;
   website?: string;
 }): Promise<ContactSubmitResult> {
@@ -48,6 +49,7 @@ export async function submitContact(input: {
     id,
     name: parsed.name,
     email: parsed.email,
+    topic: parsed.topic,
     message: parsed.message,
     locale,
     emailSent: false,
@@ -64,6 +66,7 @@ export async function submitContact(input: {
       {
         name: parsed.name,
         email: parsed.email,
+        topic: t(`topics.${parsed.topic}`),
         message: parsed.message,
         locale,
       },

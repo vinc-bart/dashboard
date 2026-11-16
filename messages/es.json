@@ -61,6 +61,13 @@
     "body": "¿Una pregunta, un aviso o una idea para Paris Ouverte? Escríbanos.",
     "name": "Nombre",
     "email": "Correo",
+    "topic": "Asunto",
+    "topicPlaceholder": "Elija un asunto",
+    "topics": {
+      "question": "Pregunta",
+      "report": "Aviso",
+      "idea": "Idea"
+    },
     "message": "Mensaje",
     "submit": "Enviar",
     "pending": "Enviando…",
@@ -73,6 +80,8 @@
     "emailRequired": "Indique su correo.",
     "emailInvalid": "Este correo no es válido.",
     "emailTooLong": "El correo es demasiado largo.",
+    "topicRequired": "Elija un asunto.",
+    "topicInvalid": "Este asunto no es válido.",
     "messageRequired": "Escriba un mensaje.",
     "messageTooLong": "El mensaje es demasiado largo."
   },
@@ -423,7 +432,7 @@
     "alertText": "Estación {station}: {bikes} bici(s) (umbral {threshold}). {url}",
     "contactSubject": "Contacto Paris Ouverte · {name}",
     "contactPreview": "Mensaje de {name}.",
-    "contactBody": "{name} ({email}) escribió desde el formulario de contacto (locale {locale}):"
+    "contactBody": "{name} ({email}) escribió desde el formulario de contacto, asunto « {topic} » (locale {locale}):"
   },
   "Datasets": {
     "velib": {

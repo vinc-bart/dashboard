@@ -3,11 +3,13 @@ import { Link } from "@/i18n/navigation";
 import { PageIntro } from "@/components/dashboard/page-intro";
 import { Card } from "@/components/ui/card";
 import { listContactMessages } from "@/lib/db/queries";
+import { isContactTopic } from "@/lib/contact";
 import { requireAdmin } from "@/lib/session";
 
 export default async function AdminMessagesPage() {
   await requireAdmin();
   const t = await getTranslations("Admin");
+  const topics = await getTranslations("Contact");
   const format = await getFormatter();
   const messages = await listContactMessages();
 
@@ -34,6 +36,9 @@ export default async function AdminMessagesPage() {
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
                   <div>
                     <p className="font-medium text-heading">{row.name}</p>
+                    {row.topic && isContactTopic(row.topic) ? (
+                      <p className="text-sm text-muted">{topics(`topics.${row.topic}`)}</p>
+                    ) : null}
                     <a
                       href={`mailto:${row.email}`}
                       className="text-sm text-muted hover:underline"

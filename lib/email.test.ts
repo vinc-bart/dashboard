@@ -150,6 +150,7 @@ describe("mail templates", () => {
     const mail = contactMail({
       name: "Ada <Lovelace>",
       email: "ada@example.com",
+      topic: "Question",
       message: "Hello\n<script>x</script>",
       locale: "fr",
     });
@@ -164,9 +165,12 @@ describe("mail templates", () => {
     const mail = contactMail({
       name: "Ada\r\nBcc: evil@example.com",
       email: "ada@example.com",
+      topic: "Question\r\nBcc: evil@example.com",
       message: "hi",
       locale: "fr",
     });
+    expect(mail.text).not.toMatch(/[\r\n].*Bcc/);
+    expect(mail.text).toContain("Question Bcc: evil@example.com");
     expect(mail.subject).not.toMatch(/[\r\n]/);
     expect(mail.subject).toBe("Contact Paris Ouverte · Ada Bcc: evil@example.com");
     expect(stripHeaderBreaks("a\rb\nc")).toBe("a b c");

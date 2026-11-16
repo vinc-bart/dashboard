@@ -168,17 +168,19 @@ export function alertMail(
 }
 
 export function contactMail(
-  values: { name: string; email: string; message: string; locale: string },
+  values: { name: string; email: string; topic: string; message: string; locale: string },
   locale: AppLocale = "fr",
 ): MailContent {
   const copy = mailCopy(locale);
   const name = stripHeaderBreaks(values.name);
   const email = stripHeaderBreaks(values.email);
+  const topic = stripHeaderBreaks(values.topic);
   const subject = interpolate(copy.contactSubject, { name });
   const preview = interpolate(copy.contactPreview, { name });
   const intro = interpolate(copy.contactBody, {
     name,
     email,
+    topic,
     locale: values.locale,
   });
   const safeMessage = escapeHtml(values.message).replaceAll("\n", "<br />");
