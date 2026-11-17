@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Wordmark } from "@/components/layout/wordmark";
 import { SkipLink } from "@/components/layout/skip-link";
 import { LocaleSwitcher } from "@/components/layout/locale-switcher";
+import { MorphSlot } from "@/components/layout/morph-slot";
 import { StickyHeader } from "@/components/layout/sticky-header";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { parseTheme } from "@/lib/theme";
@@ -28,13 +29,12 @@ function CompactAction({
       href={href}
       variant={variant}
       size="sm"
-      className="max-sm:size-8 max-sm:px-0 group-data-[compact=true]/header:size-8 group-data-[compact=true]/header:px-0"
+      className="header-morph px-3 group-data-[compact=true]/header:px-2"
     >
-      <Icon
-        className="hidden size-4 max-sm:block group-data-[compact=true]/header:block"
-        aria-hidden
-      />
-      <span className="max-sm:sr-only group-data-[compact=true]/header:sr-only">{label}</span>
+      <MorphSlot when="compact">
+        <Icon className="size-4" aria-hidden />
+      </MorphSlot>
+      <MorphSlot>{label}</MorphSlot>
     </Button>
   );
 }
@@ -73,11 +73,11 @@ export async function SiteHeader({
   return (
     <StickyHeader>
       <SkipLink />
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-3 gap-y-2 px-6 py-2.5 transition-[padding] duration-200 motion-reduce:transition-none group-data-[compact=true]/header:py-1.5">
+      <div className="header-morph mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-3 gap-y-2 px-6 py-2.5 group-data-[compact=true]/header:py-1.5">
         <Wordmark />
         <div className="flex flex-wrap items-center justify-end gap-2">
-          <LocaleSwitcher icons />
-          <ThemeToggle initial={theme} iconsOnly />
+          <LocaleSwitcher collapsible />
+          <ThemeToggle initial={theme} collapsible />
           {headerSessionActions(variant, session, t)}
         </div>
       </div>

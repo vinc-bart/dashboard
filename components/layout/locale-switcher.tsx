@@ -1,38 +1,70 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Languages } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/navigation";
+import { MorphSlot } from "@/components/layout/morph-slot";
+import { useHeaderCompact } from "@/components/layout/sticky-header";
 import { routing, type AppLocale } from "@/i18n/routing";
+
+const MORPH_MS = 200;
 
 export function LocaleSwitcher({
   invert = false,
-  icons = false,
-}: Readonly<{ invert?: boolean; icons?: boolean }>) {
+  collapsible = false,
+}: Readonly<{ invert?: boolean; collapsible?: boolean }>) {
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations("Common");
+  const compact = useHeaderCompact();
+  const [codes, setCodes] = useState(false);
   const frame = invert ? "border-white/20 bg-white/5 text-white" : "border-line bg-paper text-ink";
-  const label = `${t("localeSwitcher")}, ${t(`locale.${locale}`)}`;
+  const showCodes = collapsible && codes;
+
+  useEffect(() => {
+    if (!collapsible) return;
+    if (compact) {
+      setCodes(true);
+      return;
+    }
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      setCodes(false);
+      return;
+    }
+    const timeout = window.setTimeout(() => setCodes(false), MORPH_MS);
+    return () => window.clearTimeout(timeout);
+  }, [collapsible, compact]);
 
   return (
-    <label className={`inline-flex items-center text-xs ${icons ? "gap-1.5" : "gap-2"}`}>
-      {icons ? (
-        <Languages
-          className={`h-3.5 w-3.5 shrink-0 ${invert ? "text-white/70" : "text-muted"}`}
-          aria-hidden
-        />
-      ) : null}
-      <span className={invert || icons ? "sr-only" : "text-muted"}>{t("localeSwitcher")}</span>
+    <label className="inline-flex items-center gap-2 text-xs">
+      {collapsible ? (
+        <span className="inline-flex items-center">
+          <MorphSlot when="compact">
+            <Languages
+              className={`mr-1.5 h-3.5 w-3.5 ${invert ? "text-white/70" : "text-muted"}`}
+              aria-hidden
+            />
+          </MorphSlot>
+          <MorphSlot>
+            <span className={invert ? "sr-only" : "text-muted"}>{t("localeSwitcher")}</span>
+          </MorphSlot>
+        </span>
+      ) : (
+        <span className={invert ? "sr-only" : "text-muted"}>{t("localeSwitcher")}</span>
+      )}
       <select
         className={`rounded-none border text-xs font-medium focus-field ${
-          icons
-            ? "h-9 px-1.5 group-data-[compact=true]/header:h-8"
+          collapsible
+            ? "header-morph h-9 w-28 px-2 group-data-[compact=true]/header:h-8 group-data-[compact=true]/header:w-14 group-data-[compact=true]/header:px-1.5"
             : "h-9 px-2"
         } ${frame}`}
         value={locale}
-        aria-label={icons ? label : t("localeSwitcher")}
+        aria-label={
+          collapsible ? `${t("localeSwitcher")}, ${t(`locale.${locale}`)}` : t("localeSwitcher")
+        }
         onChange={(event) => {
           const query = window.location.search.replace(/^\?/, "");
           const href = query ? `${pathname}?${query}` : pathname;
@@ -41,7 +73,7 @@ export function LocaleSwitcher({
       >
         {routing.locales.map((item) => (
           <option key={item} value={item}>
-            {icons ? item.toUpperCase() : t(`locale.${item}`)}
+            {showCodes ? item.toUpperCase() : t(`locale.${item}`)}
           </option>
         ))}
       </select>

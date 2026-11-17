@@ -3,6 +3,7 @@
 import { useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
 import { Monitor, Moon, Sun } from "lucide-react";
+import { MorphSlot } from "@/components/layout/morph-slot";
 import {
   applyThemeClass,
   readThemeCookie,
@@ -29,11 +30,11 @@ function getSnapshot() {
 
 export function ThemeToggle({
   invert = false,
-  iconsOnly = false,
+  collapsible = false,
   initial = "system",
 }: Readonly<{
   invert?: boolean;
-  iconsOnly?: boolean;
+  collapsible?: boolean;
   initial?: ColorScheme;
 }>) {
   const t = useTranslations("Common");
@@ -65,15 +66,25 @@ export function ThemeToggle({
             key={option.value}
             type="button"
             onClick={() => onSelect(option.value)}
-            className={`inline-flex h-9 items-center text-xs font-medium transition focus-field group-data-[compact=true]/header:h-8 ${
-              iconsOnly ? "px-2 group-data-[compact=true]/header:px-1.5" : "gap-1.5 px-2.5"
+            className={`inline-flex h-9 items-center text-xs font-medium focus-field ${
+              collapsible
+                ? "header-morph px-2.5 group-data-[compact=true]/header:h-8 group-data-[compact=true]/header:px-2"
+                : "gap-1.5 px-2.5 transition"
             } ${selected ? active : idle}`}
             aria-pressed={selected}
             aria-label={label}
             title={label}
           >
-            <Icon className="h-3.5 w-3.5" aria-hidden />
-            <span className={iconsOnly ? "sr-only" : "hidden sm:inline"}>{label}</span>
+            <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden />
+            {collapsible ? (
+              <span className="hidden sm:contents">
+                <MorphSlot>
+                  <span className="pl-1.5">{label}</span>
+                </MorphSlot>
+              </span>
+            ) : (
+              <span className="hidden sm:inline">{label}</span>
+            )}
           </button>
         );
       })}

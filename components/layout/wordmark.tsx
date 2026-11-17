@@ -12,11 +12,11 @@ export function Wordmark({
   const titleSize =
     size === "lg"
       ? "text-4xl sm:text-5xl"
-      : "text-xl sm:group-data-[compact=true]/header:text-base";
+      : "header-morph text-xl sm:group-data-[compact=true]/header:text-base";
   const subSize =
     size === "lg"
       ? "text-lg sm:text-xl"
-      : "text-sm sm:group-data-[compact=true]/header:text-base";
+      : "header-morph text-sm sm:group-data-[compact=true]/header:text-base";
 
   return (
     <Link
@@ -28,7 +28,7 @@ export function Wordmark({
           Paris
         </span>
         <span
-          className={`mt-0.5 font-display font-medium leading-none sm:group-data-[compact=true]/header:mt-0 sm:group-data-[compact=true]/header:ml-1.5 ${subSize} ${
+          className={`header-morph mt-0.5 font-display font-medium leading-none sm:group-data-[compact=true]/header:mt-0 sm:group-data-[compact=true]/header:ml-1.5 ${subSize} ${
             invert ? "text-white/80" : "text-heading/70"
           }`}
         >
@@ -36,7 +36,7 @@ export function Wordmark({
         </span>
       </span>
       <span
-        className={`mt-1.5 block bg-accent transition-all ${
+        className={`header-morph mt-1.5 block bg-accent ${
           size === "lg"
             ? "h-1.5 w-14 group-hover:w-20"
             : "h-1 w-10 group-hover:w-14 group-data-[compact=true]/header:mt-1 group-data-[compact=true]/header:h-0.5 group-data-[compact=true]/header:w-8"
