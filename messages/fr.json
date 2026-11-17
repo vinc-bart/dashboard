@@ -758,5 +758,45 @@
     "compare": "Comparaison",
     "bikes": "Vélos",
     "bboxHint": "La comparaison par arrondissement n’est pas disponible sur les cartes bbox."
+  },
+  "PublicTheme": {
+    "attribution": "Wikipédia — CC BY-SA 4.0",
+    "source": "Jeu sur opendata.paris.fr",
+    "openMap": "Voir la carte",
+    "signup": "Créer un compte",
+    "signupHint": "La carte, les filtres et les favoris sont dans l’espace privé.",
+    "summaryUnavailable": "Le résumé encyclopédique est momentanément indisponible.",
+    "velib": {
+      "title": "Vélib’",
+      "intro": "Vélos en libre-service comptés en temps réel sur le réseau Vélib’ Métropole.",
+      "figure": "Vélos disponibles",
+      "hint": "vélos disponibles maintenant"
+    },
+    "nature": {
+      "title": "Nature",
+      "intro": "Arbres d’alignement et espaces verts recensés par la Ville de Paris."
+    },
+    "trees": {
+      "figure": "Arbres",
+      "hint": "arbres d’alignement et d’espaces verts"
+    },
+    "parks": {
+      "figure": "Espaces verts",
+      "hint": "espaces verts ouverts au public"
+    },
+    "air": {
+      "title": "Air",
+      "intro": "Jours de bonne qualité de l’air, d’après l’indice ATMO publié par Airparif.",
+      "figure": "Bonne qualité",
+      "value": "{count} j.",
+      "hint": "jours « bonne » qualité en {year}",
+      "unavailable": "indice ATMO indisponible"
+    },
+    "agenda": {
+      "title": "Agenda",
+      "intro": "Sorties et rendez-vous publiés dans le jeu « Que faire à Paris ».",
+      "figure": "Événements",
+      "hint": "événements Que faire à Paris"
+    }
   }
 }

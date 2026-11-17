@@ -758,5 +758,45 @@
     "compare": "Comparison",
     "bikes": "Bikes",
     "bboxHint": "Arrondissement comparison is not available on bbox maps."
+  },
+  "PublicTheme": {
+    "attribution": "Wikipedia — CC BY-SA 4.0",
+    "source": "Dataset on opendata.paris.fr",
+    "openMap": "Open the map",
+    "signup": "Create an account",
+    "signupHint": "The map, filters and favourites live in the private area.",
+    "summaryUnavailable": "The encyclopaedia summary is temporarily unavailable.",
+    "velib": {
+      "title": "Vélib’",
+      "intro": "Shared bikes counted live across the Vélib’ Métropole network.",
+      "figure": "Bikes available",
+      "hint": "bikes available now"
+    },
+    "nature": {
+      "title": "Nature",
+      "intro": "Street trees and green spaces recorded by the City of Paris."
+    },
+    "trees": {
+      "figure": "Trees",
+      "hint": "street and park trees"
+    },
+    "parks": {
+      "figure": "Green spaces",
+      "hint": "public green spaces"
+    },
+    "air": {
+      "title": "Air",
+      "intro": "Days of good air quality, from the ATMO index published by Airparif.",
+      "figure": "Good quality",
+      "value": "{count} d.",
+      "hint": "“good” air days in {year}",
+      "unavailable": "ATMO index unavailable"
+    },
+    "agenda": {
+      "title": "Events",
+      "intro": "Outings published in the “Que faire à Paris” dataset.",
+      "figure": "Events",
+      "hint": "Que faire à Paris events"
+    }
   }
 }
