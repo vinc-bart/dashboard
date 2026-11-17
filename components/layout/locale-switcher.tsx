@@ -1,25 +1,38 @@
 "use client";
 
+import { Languages } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { routing, type AppLocale } from "@/i18n/routing";
 
 export function LocaleSwitcher({
   invert = false,
-}: Readonly<{ invert?: boolean }>) {
+  icons = false,
+}: Readonly<{ invert?: boolean; icons?: boolean }>) {
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations("Common");
   const frame = invert ? "border-white/20 bg-white/5 text-white" : "border-line bg-paper text-ink";
+  const label = `${t("localeSwitcher")}, ${t(`locale.${locale}`)}`;
 
   return (
-    <label className="inline-flex items-center gap-2 text-xs">
-      <span className={invert ? "sr-only" : "text-muted"}>{t("localeSwitcher")}</span>
+    <label className={`inline-flex items-center text-xs ${icons ? "gap-1.5" : "gap-2"}`}>
+      {icons ? (
+        <Languages
+          className={`h-3.5 w-3.5 shrink-0 ${invert ? "text-white/70" : "text-muted"}`}
+          aria-hidden
+        />
+      ) : null}
+      <span className={invert || icons ? "sr-only" : "text-muted"}>{t("localeSwitcher")}</span>
       <select
-        className={`h-9 rounded-none border px-2 text-xs font-medium focus-field ${frame}`}
+        className={`rounded-none border text-xs font-medium focus-field ${
+          icons
+            ? "h-9 px-1.5 group-data-[compact=true]/header:h-8"
+            : "h-9 px-2"
+        } ${frame}`}
         value={locale}
-        aria-label={t("localeSwitcher")}
+        aria-label={icons ? label : t("localeSwitcher")}
         onChange={(event) => {
           const query = window.location.search.replace(/^\?/, "");
           const href = query ? `${pathname}?${query}` : pathname;
@@ -28,7 +41,7 @@ export function LocaleSwitcher({
       >
         {routing.locales.map((item) => (
           <option key={item} value={item}>
-            {t(`locale.${item}`)}
+            {icons ? item.toUpperCase() : t(`locale.${item}`)}
           </option>
         ))}
       </select>

@@ -29,9 +29,11 @@ function getSnapshot() {
 
 export function ThemeToggle({
   invert = false,
+  iconsOnly = false,
   initial = "system",
 }: Readonly<{
   invert?: boolean;
+  iconsOnly?: boolean;
   initial?: ColorScheme;
 }>) {
   const t = useTranslations("Common");
@@ -63,15 +65,15 @@ export function ThemeToggle({
             key={option.value}
             type="button"
             onClick={() => onSelect(option.value)}
-            className={`inline-flex h-9 items-center gap-1.5 px-2.5 text-xs font-medium transition focus-field ${
-              selected ? active : idle
-            }`}
+            className={`inline-flex h-9 items-center text-xs font-medium transition focus-field group-data-[compact=true]/header:h-8 ${
+              iconsOnly ? "px-2 group-data-[compact=true]/header:px-1.5" : "gap-1.5 px-2.5"
+            } ${selected ? active : idle}`}
             aria-pressed={selected}
             aria-label={label}
             title={label}
           >
             <Icon className="h-3.5 w-3.5" aria-hidden />
-            <span className="hidden sm:inline">{label}</span>
+            <span className={iconsOnly ? "sr-only" : "hidden sm:inline"}>{label}</span>
           </button>
         );
       })}
