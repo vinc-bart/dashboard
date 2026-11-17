@@ -45,7 +45,7 @@ export default async function Home() {
   ];
 
   return (
-    <div className="flex min-h-full flex-col">
+    <div className="flex min-h-dvh flex-col">
       <SiteHeader />
       <main id="main" className="flex-1">
         <section className="relative overflow-hidden border-b border-line bg-navy text-white">

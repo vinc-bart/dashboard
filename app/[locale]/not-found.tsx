@@ -7,7 +7,7 @@ import { PageTitle } from "@/components/ui/heading";
 export default async function NotFound() {
   const t = await getTranslations("NotFound");
   return (
-    <div className="flex min-h-full flex-col">
+    <div className="flex min-h-dvh flex-col">
       <SiteHeader />
       <main id="main" className="mx-auto flex w-full max-w-lg flex-1 flex-col justify-center px-6 py-16">
         <PageTitle>{t("title")}</PageTitle>
