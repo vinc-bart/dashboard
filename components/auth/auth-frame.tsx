@@ -10,7 +10,7 @@ export async function AuthFrame({
   const t = await getTranslations("Landing");
 
   return (
-    <div className="flex min-h-full flex-col">
+    <div className="flex min-h-dvh flex-col">
       <SiteHeader variant="auth" />
       <main id="main" className="flex flex-1">
         <div className="hidden w-[min(42%,28rem)] flex-col justify-between bg-navy px-10 py-12 text-white lg:flex">

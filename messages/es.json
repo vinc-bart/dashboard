@@ -758,5 +758,45 @@
     "compare": "Comparación",
     "bikes": "Bicis",
     "bboxHint": "La comparación por distrito no está disponible en los mapas bbox."
+  },
+  "PublicTheme": {
+    "attribution": "Wikipedia — CC BY-SA 4.0",
+    "source": "Conjunto en opendata.paris.fr",
+    "openMap": "Ver el mapa",
+    "signup": "Crear una cuenta",
+    "signupHint": "El mapa, los filtros y los favoritos están en el espacio privado.",
+    "summaryUnavailable": "El resumen enciclopédico no está disponible por el momento.",
+    "velib": {
+      "title": "Vélib’",
+      "intro": "Bicicletas de libre servicio contadas en tiempo real en la red Vélib’ Métropole.",
+      "figure": "Bicicletas disponibles",
+      "hint": "bicicletas disponibles ahora"
+    },
+    "nature": {
+      "title": "Naturaleza",
+      "intro": "Árboles de alineación y espacios verdes registrados por la Ciudad de París."
+    },
+    "trees": {
+      "figure": "Árboles",
+      "hint": "árboles de alineación y de espacios verdes"
+    },
+    "parks": {
+      "figure": "Espacios verdes",
+      "hint": "espacios verdes abiertos al público"
+    },
+    "air": {
+      "title": "Aire",
+      "intro": "Días de buena calidad del aire, según el índice ATMO publicado por Airparif.",
+      "figure": "Buena calidad",
+      "value": "{count} d.",
+      "hint": "días de calidad «buena» en {year}",
+      "unavailable": "índice ATMO no disponible"
+    },
+    "agenda": {
+      "title": "Agenda",
+      "intro": "Salidas publicadas en el conjunto «Que faire à Paris».",
+      "figure": "Eventos",
+      "hint": "eventos Que faire à Paris"
+    }
   }
 }

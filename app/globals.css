@@ -54,6 +54,11 @@ body {
   color: var(--ink);
 }
 
+/* The sticky header changes height. Anchoring would nudge scrollY to compensate and flip it back. */
+html {
+  overflow-anchor: none;
+}
+
 body {
   font-family: var(--font-ibm-plex-sans), Arial, Helvetica, sans-serif;
 }
@@ -112,6 +117,21 @@ a {
 
 .leaflet-popup-content {
   color: var(--ink);
+}
+
+/* Beats Tailwind's layered `transition` utility so header controls can morph. */
+.header-morph {
+  interpolate-size: allow-keywords;
+  transition-property: padding, height, width, max-width, gap, margin, font-size, grid-template-columns, opacity,
+    box-shadow, border-color, background-color, color;
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header-morph {
+    transition: none;
+  }
 }
 
 .skip-link {

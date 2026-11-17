@@ -29,7 +29,7 @@ export default async function ContactPage() {
   }
 
   return (
-    <div className="flex min-h-full flex-col">
+    <div className="flex min-h-dvh flex-col">
       <SiteHeader />
       <main id="main" className="flex flex-1 items-center justify-center px-6 py-16">
         {card}
