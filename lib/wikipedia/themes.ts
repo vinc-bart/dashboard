@@ -1,5 +1,6 @@
 import type { AppLocale } from "@/i18n/routing";
 import { DATASETS } from "@/lib/opendata/datasets";
+import type { WikipediaReading } from "./summary";
 
 export const PUBLIC_THEME_SLUGS = ["velib", "nature", "air", "agenda"] as const;
 
@@ -11,6 +12,7 @@ export type ThemeSection = {
   id: ThemeSectionId;
   sourceUrl: string;
   titles: Record<AppLocale, string>;
+  reading: WikipediaReading;
 };
 
 export type PublicTheme = {
@@ -31,25 +33,27 @@ export const PUBLIC_THEMES: Record<PublicThemeSlug, PublicTheme> = {
   velib: {
     slug: "velib",
     dashboardHref: "/dashboard/velib",
-    sections: [{ id: "velib", sourceUrl: DATASETS.velib.sourceUrl, titles: titles.velib }],
+    sections: [
+      { id: "velib", sourceUrl: DATASETS.velib.sourceUrl, titles: titles.velib, reading: "abridged" },
+    ],
   },
   nature: {
     slug: "nature",
     dashboardHref: "/dashboard/nature",
     sections: [
-      { id: "trees", sourceUrl: DATASETS.trees.sourceUrl, titles: titles.trees },
-      { id: "parks", sourceUrl: DATASETS.parks.sourceUrl, titles: titles.parks },
+      { id: "trees", sourceUrl: DATASETS.trees.sourceUrl, titles: titles.trees, reading: "lead" },
+      { id: "parks", sourceUrl: DATASETS.parks.sourceUrl, titles: titles.parks, reading: "lead" },
     ],
   },
   air: {
     slug: "air",
     dashboardHref: "/dashboard/air",
-    sections: [{ id: "air", sourceUrl: DATASETS.air.sourceUrl, titles: titles.air }],
+    sections: [{ id: "air", sourceUrl: DATASETS.air.sourceUrl, titles: titles.air, reading: "article" }],
   },
   agenda: {
     slug: "agenda",
     dashboardHref: "/dashboard/events",
-    sections: [{ id: "events", sourceUrl: DATASETS.events.sourceUrl, titles: titles.agenda }],
+    sections: [{ id: "events", sourceUrl: DATASETS.events.sourceUrl, titles: titles.agenda, reading: "article" }],
   },
 };
 

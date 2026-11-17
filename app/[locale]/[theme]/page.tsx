@@ -133,7 +133,9 @@ export default async function PublicThemePage({
   const [facts, summaries] = await Promise.all([
     loadFacts(slug),
     Promise.all(
-      theme.sections.map((section) => fetchWikipediaSummary(locale, section.titles)),
+      theme.sections.map((section) =>
+        fetchWikipediaSummary(locale, section.titles, section.reading),
+      ),
     ),
   ]);
 
@@ -248,26 +250,73 @@ function ThemeBlock({
         </a>
       </p>
       {summary ? (
-        <article className="mt-6">
-          {summary.paragraphs.map((paragraph) => (
-            <p key={paragraph} className="mt-4 text-base leading-7 first:mt-0">
-              {paragraph}
-            </p>
-          ))}
-          <p className="mt-4 text-sm text-muted">
-            <a
-              href={summary.url}
-              className="font-medium text-heading underline decoration-line underline-offset-4 hover:decoration-accent"
-            >
-              {summary.title}
-            </a>
-            {" · "}
-            {attribution}
-          </p>
-        </article>
+        <WikipediaArticle
+          summary={summary}
+          headingOffset={headed ? 1 : 0}
+          attribution={attribution}
+        />
       ) : (
         <p className="mt-6 text-sm text-muted">{missingSummary}</p>
       )}
     </section>
+  );
+}
+
+function WikipediaArticle({
+  summary,
+  headingOffset,
+  attribution,
+}: Readonly<{
+  summary: WikipediaSummary;
+  headingOffset: number;
+  attribution: string;
+}>) {
+  return (
+    <article className="mt-8">
+      {summary.paragraphs.map((paragraph, index) => (
+        <p key={`lead-${index}`} className="mt-4 text-base leading-7 first:mt-0">
+          {paragraph}
+        </p>
+      ))}
+      {summary.sections.map((section, index) => {
+        const level = Math.min(4, section.level + headingOffset) as 2 | 3 | 4;
+        return (
+          <section key={`${section.heading}-${index}`}>
+            <WikiHeading level={level}>{section.heading}</WikiHeading>
+            {section.paragraphs.map((paragraph, paragraphIndex) => (
+              <p key={`${index}-${paragraphIndex}`} className="mt-4 text-base leading-7">
+                {paragraph}
+              </p>
+            ))}
+          </section>
+        );
+      })}
+      <p className="mt-8 text-sm text-muted">
+        <a
+          href={summary.url}
+          className="font-medium text-heading underline decoration-line underline-offset-4 hover:decoration-accent"
+        >
+          {summary.title}
+        </a>
+        {" · "}
+        {attribution}
+      </p>
+    </article>
+  );
+}
+
+function WikiHeading({
+  level,
+  children,
+}: Readonly<{
+  level: 2 | 3 | 4;
+  children: string;
+}>) {
+  const Tag = level === 2 ? "h2" : level === 3 ? "h3" : "h4";
+  const size = level === 2 ? "mt-10 text-2xl" : level === 3 ? "mt-8 text-lg" : "mt-6 text-base";
+  return (
+    <Tag className={`${size} font-display font-semibold leading-tight tracking-tight text-heading`}>
+      {children}
+    </Tag>
   );
 }
