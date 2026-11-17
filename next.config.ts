@@ -57,6 +57,9 @@ export default withSentryConfig(withNextIntl(nextConfig), {
   project: process.env.SENTRY_PROJECT?.trim() || "paris-ouverte",
   authToken: sentryAuthToken,
   silent: !process.env.CI,
+  // Pair with app/sentry-tunnel/route.ts so this stays an in-app rewrite.
+  // Without that file, Next proxies /monitoring to Sentry and logs
+  // MaxListenersExceededWarning (11 close listeners) on every envelope.
   tunnelRoute: "/monitoring",
   widenClientFileUpload: true,
   sourcemaps: {

@@ -21,7 +21,8 @@ export function proxy(request: NextRequest) {
   if (
     pathname.startsWith("/dev") ||
     pathname.startsWith("/api") ||
-    pathname.startsWith("/monitoring")
+    pathname.startsWith("/monitoring") ||
+    pathname.startsWith("/sentry-tunnel")
   ) {
     return NextResponse.next();
   }
@@ -33,6 +34,6 @@ export const config = {
   matcher: [
     "/",
     "/(fr|en|es)/:path*",
-    "/((?!api|monitoring|_next|_vercel|dev|favicon.ico|.*[.].*).*)",
+    "/((?!api|monitoring|sentry-tunnel|_next|_vercel|dev|favicon.ico|.*[.].*).*)",
   ],
 };
