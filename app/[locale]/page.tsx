@@ -111,13 +111,14 @@ export default async function Home() {
           ) : null}
           <RevealList className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <RevealItem>
-              <KpiCard label={t("kpiVelib")} value={bikesLabel} hint={t("kpiVelibHint")} />
+              <KpiCard href="/velib" label={t("kpiVelib")} value={bikesLabel} hint={t("kpiVelibHint")} />
             </RevealItem>
             <RevealItem>
-              <KpiCard label={t("kpiNature")} value={treesLabel} hint={t("kpiNatureHint")} />
+              <KpiCard href="/nature" label={t("kpiNature")} value={treesLabel} hint={t("kpiNatureHint")} />
             </RevealItem>
             <RevealItem>
               <KpiCard
+                href="/air"
                 label={t("kpiAir")}
                 value={
                   latestAir
@@ -132,7 +133,7 @@ export default async function Home() {
               />
             </RevealItem>
             <RevealItem>
-              <KpiCard label={t("kpiAgenda")} value={eventsLabel} hint={t("kpiAgendaHint")} />
+              <KpiCard href="/agenda" label={t("kpiAgenda")} value={eventsLabel} hint={t("kpiAgendaHint")} />
             </RevealItem>
           </RevealList>
         </section>
