@@ -19,24 +19,21 @@ export function LocaleSwitcher({
   const router = useRouter();
   const t = useTranslations("Common");
   const compact = useHeaderCompact();
-  const [codes, setCodes] = useState(false);
+  const [trackedCompact, setTrackedCompact] = useState(compact);
+  const [holdCodes, setHoldCodes] = useState(false);
+  if (collapsible && compact !== trackedCompact) {
+    setTrackedCompact(compact);
+    setHoldCodes(!compact);
+  }
   const frame = invert ? "border-white/20 bg-white/5 text-white" : "border-line bg-paper text-ink";
-  const showCodes = collapsible && codes;
+  const showCodes = collapsible && (compact || holdCodes);
 
   useEffect(() => {
-    if (!collapsible) return;
-    if (compact) {
-      setCodes(true);
-      return;
-    }
+    if (!collapsible || compact || !holdCodes) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) {
-      setCodes(false);
-      return;
-    }
-    const timeout = window.setTimeout(() => setCodes(false), MORPH_MS);
+    const timeout = window.setTimeout(() => setHoldCodes(false), reduce ? 0 : MORPH_MS);
     return () => window.clearTimeout(timeout);
-  }, [collapsible, compact]);
+  }, [collapsible, compact, holdCodes]);
 
   return (
     <label className="inline-flex items-center gap-2 text-xs">
