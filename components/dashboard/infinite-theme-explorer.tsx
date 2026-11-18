@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode, type RefObject } from "react";
+import { useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import { useInfiniteQuery, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
 import { ThemeExplorerClient } from "@/components/dashboard/theme-explorer-client";
 import {
   opendataQueryErrorKind,
@@ -27,9 +28,10 @@ function infiniteTableEndLabel(
   t: (key: "loadingMore" | "loadMoreHint") => string,
   isFetchingNextPage: boolean,
   hasNextPage: boolean,
+  filtering: boolean,
 ) {
   if (isFetchingNextPage) return t("loadingMore");
-  if (hasNextPage) return t("loadMoreHint");
+  if (hasNextPage && !filtering) return t("loadMoreHint");
   return null;
 }
 
@@ -107,6 +109,9 @@ export function InfiniteThemeExplorer({
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const sentinel = useRef<HTMLDivElement | null>(null);
   const skipTableReset = useRef(true);
+  // While filtering, the matching rows are few so the sentinel stays visible and would
+  // chain-load every remaining page. Pause auto-loading; offer an explicit button instead.
+  const [filtering, setFiltering] = useState(false);
 
   const markersQuery = useQuery({
     queryKey: themeMarkersQueryKey(dataset.id, district),
@@ -175,7 +180,7 @@ export function InfiniteThemeExplorer({
   useInfiniteTableScroll({
     scrollRef,
     sentinelRef: sentinel,
-    hasNextPage: Boolean(hasNextPage),
+    hasNextPage: Boolean(hasNextPage) && !filtering,
     isFetchingNextPage,
     fetchNextPage,
     dep: records.length,
@@ -207,13 +212,24 @@ export function InfiniteThemeExplorer({
         paginate={false}
         tableMaxHeight="28rem"
         tableScrollRef={scrollRef}
+        onQueryChange={(value) => setFiltering(value.trim() !== "")}
         tableEnd={
           <div
             ref={sentinel}
             className="border-t border-line px-4 py-3 text-center text-sm text-muted"
             aria-live="polite"
           >
-            {infiniteTableEndLabel(t, isFetchingNextPage, hasNextPage)}
+            {infiniteTableEndLabel(t, isFetchingNextPage, hasNextPage, filtering)}
+            {filtering && hasNextPage && !isFetchingNextPage ? (
+              <Button
+                type="button"
+                variant="ghost"
+                className="h-9 px-3"
+                onClick={() => void fetchNextPage()}
+              >
+                {t("loadMore")}
+              </Button>
+            ) : null}
           </div>
         }
       />
