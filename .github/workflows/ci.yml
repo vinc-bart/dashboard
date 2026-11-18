@@ -33,10 +33,21 @@ jobs:
       - name: Audit production dependencies
         continue-on-error: true
         run: pnpm audit --audit-level=high --prod
-      - run: pnpm build
       - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-      - run: pnpm exec playwright install --with-deps chromium
+      - name: Build and install Chromium
+        run: |
+          pnpm exec playwright install --with-deps chromium > /tmp/playwright-install.log 2>&1 &
+          pid=$!
+          set +e
+          pnpm build
+          build_status=$?
+          set -e
+          if ! wait "$pid"; then
+            cat /tmp/playwright-install.log >&2
+            exit 1
+          fi
+          exit "$build_status"
       - run: pnpm test:e2e
