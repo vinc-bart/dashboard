@@ -15,8 +15,8 @@ jobs:
           APP_URL: https://dashboard.vvbb.fr
         run: |
           if [ -z "$CRON_SECRET" ]; then
-            echo "CRON_SECRET is not set" >&2
-            exit 1
+            echo "CRON_SECRET is not set; skipping alert evaluation."
+            exit 0
           fi
           curl -sfS -X POST \
             -H "Authorization: Bearer ${CRON_SECRET}" \
