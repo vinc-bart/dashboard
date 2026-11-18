@@ -1,4 +1,4 @@
-import { execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 
 if (!fs.existsSync(".next/standalone")) {
@@ -6,7 +6,8 @@ if (!fs.existsSync(".next/standalone")) {
   process.exit(0);
 }
 
-execSync("cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/", {
+fs.cpSync("public", ".next/standalone/public", { recursive: true });
+fs.cpSync(".next/static", ".next/standalone/.next/static", { recursive: true });
+execFileSync(process.execPath, ["scripts/copy-newrelic-standalone.mjs"], {
   stdio: "inherit",
 });
-execSync("node scripts/copy-newrelic-standalone.mjs", { stdio: "inherit" });
