@@ -12,6 +12,9 @@ concurrency:
 jobs:
   check:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
     env:
       NEXT_TELEMETRY_DISABLED: "1"
       BETTER_AUTH_SECRET: ci-placeholder-secret-32chars-minok
