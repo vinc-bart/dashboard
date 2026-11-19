@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ChangeEvent, type ClipboardEvent } from "react";
+import { useEffect, useRef, useState, type ChangeEvent, type ClipboardEvent } from "react";
 
 const OTP_LENGTH = 6;
 
@@ -10,17 +10,36 @@ function digits(value: string) {
 
 export function OtpCodeField({ disabled = false }: Readonly<{ disabled?: boolean }>) {
   const [code, setCode] = useState("");
+  const fieldRef = useRef<HTMLInputElement>(null);
+  const submitting = useRef(false);
   const nextIndex = Math.min(code.length, OTP_LENGTH - 1);
 
+  useEffect(() => {
+    if (!disabled) submitting.current = false;
+  }, [disabled]);
+
+  function apply(next: string) {
+    setCode(next);
+    if (next.length < OTP_LENGTH) {
+      submitting.current = false;
+      return;
+    }
+    const input = fieldRef.current;
+    if (!input || disabled || submitting.current) return;
+    submitting.current = true;
+    input.value = next;
+    input.form?.requestSubmit();
+  }
+
   function onChange(event: ChangeEvent<HTMLInputElement>) {
-    setCode(digits(event.target.value));
+    apply(digits(event.target.value));
   }
 
   function onPaste(event: ClipboardEvent<HTMLInputElement>) {
     const text = event.clipboardData.getData("text");
     if (!text) return;
     event.preventDefault();
-    setCode(digits(text));
+    apply(digits(text));
   }
 
   return (
@@ -40,6 +59,7 @@ export function OtpCodeField({ disabled = false }: Readonly<{ disabled?: boolean
         ))}
       </div>
       <input
+        ref={fieldRef}
         id="code"
         name="code"
         value={code}
