@@ -22,6 +22,8 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000). Mailpit UI: [http://localhost:8025](http://localhost:8025).
 
+`pnpm dev` keeps a footer under the logs. Press `p` for `/fr`, `l` for `/fr/login`, `d` for `/fr/dashboard`, and `q` to quit. The URLs stay put while the logs scroll, and they are clickable. `pnpm dev:raw` runs Next without the footer. When stdout is not a terminal, `pnpm dev` falls back to plain `next dev`.
+
 SQLite lives in `data/` (gitignored) unless `TURSO_DATABASE_URL` is set, in which case the app uses Turso and does not migrate on boot. **Runtime** (`pnpm dev`, `pnpm start`, the Docker `CMD`) applies Drizzle migrations from `lib/db/migrations` to the local file (existing files are baselined, then any new SQL runs once). `pnpm build` / `next build` does **not** migrate — parallel build workers would race on the same file. After changing [`lib/db/schema.ts`](lib/db/schema.ts), run `pnpm db:generate` and commit the new files. Apply those files to Turso with `pnpm db:migrate` (needs `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN`).
 
 ### First admin
