@@ -16,6 +16,7 @@ export async function BboxExplorer({
   mapCenter?: { lat: number; lon: number };
   mapZoom?: number;
   extraMarkers?: MapMarker[];
+  fill?: boolean;
 }>) {
   return <BboxExplorerClient dataset={await localizeExplorerDataset(dataset)} {...props} />;
 }

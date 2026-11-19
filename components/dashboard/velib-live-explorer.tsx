@@ -11,12 +11,14 @@ export function VelibLiveExplorer({
   mapRecords,
   favoriteIds,
   initialError,
+  fill,
 }: Readonly<{
   dataset: ExplorerDataset;
   initial: OpenDataPage;
   mapRecords: OpenDataRecord[];
   favoriteIds: string[];
   initialError?: string | null;
+  fill?: boolean;
 }>) {
   const t = useTranslations("Pages.velib");
   const format = useFormatter();
@@ -31,6 +33,7 @@ export function VelibLiveExplorer({
       colorScheme="velib"
       descriptionKeys={["numbikesavailable", "numdocksavailable"]}
       refetchInterval={60_000}
+      fill={fill}
     >
       {({ mapRecords: liveMarkers, totalCount }) => {
         const showDown = Boolean(initialError);

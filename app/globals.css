@@ -1,6 +1,8 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
+/* Desktop-sized viewports: map + table pages fill the screen and scroll inside the table. */
+@custom-variant fill (@media (min-width: 64rem) and (min-height: 40rem));
 
 :root {
   --navy: #0f1c2a;

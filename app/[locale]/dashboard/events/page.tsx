@@ -1,6 +1,7 @@
 import { getFormatter, getTranslations } from "next-intl/server";
 import { InfiniteThemeExplorer } from "@/components/dashboard/infinite-theme-explorer";
 import { KpiStrip } from "@/components/dashboard/kpi-strip";
+import { FillPage } from "@/components/dashboard/fill-page";
 import { PageIntro } from "@/components/dashboard/page-intro";
 import { localizeExplorerDataset } from "@/lib/opendata/localize";
 import { DATASETS } from "@/lib/opendata/datasets";
@@ -14,11 +15,12 @@ export default async function EventsPage() {
   const loaded = await loadThemeExplorer(DATASETS.events, session.user.id);
 
   return (
-    <div className="space-y-6">
+    <FillPage>
       <PageIntro title={t("title")} dataset={DATASETS.events}>
         {t("body")}
       </PageIntro>
       <InfiniteThemeExplorer
+        fill
         dataset={await localizeExplorerDataset(DATASETS.events)}
         initial={loaded.table}
         mapRecords={loaded.markers.results}
@@ -35,6 +37,6 @@ export default async function EventsPage() {
           ]}
         />
       </InfiniteThemeExplorer>
-    </div>
+    </FillPage>
   );
 }

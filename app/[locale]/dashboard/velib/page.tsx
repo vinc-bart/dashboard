@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { FillPage } from "@/components/dashboard/fill-page";
 import { PageIntro } from "@/components/dashboard/page-intro";
 import { VelibLiveExplorer } from "@/components/dashboard/velib-live-explorer";
 import { localizeExplorerDataset } from "@/lib/opendata/localize";
@@ -12,17 +13,18 @@ export default async function VelibPage() {
   const loaded = await loadThemeExplorer(DATASETS.velib, session.user.id);
 
   return (
-    <div className="space-y-6">
+    <FillPage>
       <PageIntro title={t("title")} dataset={DATASETS.velib}>
         {t("body")}
       </PageIntro>
       <VelibLiveExplorer
+        fill
         dataset={await localizeExplorerDataset(DATASETS.velib)}
         initial={loaded.table}
         mapRecords={loaded.markers.results}
         favoriteIds={loaded.favoriteIds}
         initialError={loaded.ok ? null : loaded.error}
       />
-    </div>
+    </FillPage>
   );
 }

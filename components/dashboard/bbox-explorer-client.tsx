@@ -146,6 +146,7 @@ export function BboxExplorerClient({
   mapCenter,
   mapZoom,
   extraMarkers,
+  fill = false,
 }: Readonly<{
   dataset: ExplorerDataset;
   initial: OpenDataPage;
@@ -156,6 +157,7 @@ export function BboxExplorerClient({
   mapCenter?: { lat: number; lon: number };
   mapZoom?: number;
   extraMarkers?: MapMarker[];
+  fill?: boolean;
 }>) {
   const t = useTranslations("Explorer");
   const tCommon = useTranslations("Common");
@@ -246,7 +248,13 @@ export function BboxExplorerClient({
   });
 
   return (
-    <div className="space-y-4">
+    <div
+      className={
+        fill
+          ? "space-y-4 fill:flex fill:min-h-0 fill:flex-1 fill:flex-col fill:space-y-0 fill:gap-3"
+          : "space-y-4"
+      }
+    >
       {error ? (
         <output className="block text-sm text-danger" aria-live="polite">
           {error === "rate_limited" ? tCommon("rateLimited") : tCommon("opendataDown")}
@@ -266,6 +274,7 @@ export function BboxExplorerClient({
         mapZoom={mapZoom}
         extraMarkers={extraMarkers}
         paginate={false}
+        fill={fill}
         tableMaxHeight="28rem"
         tableScrollRef={scrollRef}
         tableEnd={
