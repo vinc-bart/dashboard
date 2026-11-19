@@ -78,6 +78,17 @@ export function actionForKey(key, origin) {
 }
 
 /**
+ * pnpm keeps the `--` separator in argv (`pnpm dev -- --port 4000`).
+ * Next treats everything after that `--` as a project directory.
+ * @param {string} bin
+ * @param {string[]} userArgs
+ */
+export function nextCliArgs(bin, userArgs) {
+  const args = userArgs[0] === "--" ? userArgs.slice(1) : userArgs;
+  return [bin, "dev", ...args];
+}
+
+/**
  * @param {string} platform
  * @param {string} url
  */

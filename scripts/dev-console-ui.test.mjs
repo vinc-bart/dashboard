@@ -6,6 +6,7 @@ import {
   consumeLocalUrl,
   hyperlink,
   linksFor,
+  nextCliArgs,
   renderFooter,
   stripAnsi,
 } from "./dev-console-ui.mjs";
@@ -116,6 +117,23 @@ describe("actionForKey", () => {
 
   it("ignores other keys", () => {
     expect(actionForKey("x", "http://localhost:3000")).toEqual({ type: "ignore" });
+  });
+});
+
+describe("nextCliArgs", () => {
+  it("drops the pnpm separator and keeps next options", () => {
+    expect(nextCliArgs("/next", ["--", "--port", "4000"])).toEqual([
+      "/next",
+      "dev",
+      "--port",
+      "4000",
+    ]);
+    expect(nextCliArgs("/next", ["--hostname", "0.0.0.0"])).toEqual([
+      "/next",
+      "dev",
+      "--hostname",
+      "0.0.0.0",
+    ]);
   });
 });
 

@@ -7,12 +7,13 @@ import {
   actionForKey,
   browserCommand,
   consumeLocalUrl,
+  nextCliArgs,
   renderFooter,
 } from "./dev-console-ui.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const nextBin = path.join(root, "node_modules", "next", "dist", "bin", "next");
-const nextArgs = [nextBin, "dev", ...process.argv.slice(2)];
+const nextArgs = nextCliArgs(nextBin, process.argv.slice(2));
 
 if (process.stdout.isTTY) runConsole();
 else runInherited();
