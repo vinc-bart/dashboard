@@ -5,14 +5,16 @@ export const FOOTER_LINE_COUNT = 3;
 
 const CARRY_LIMIT = 200;
 const LOCAL_URL = /Local:\s+(https?:\/\/[^\s]+)/;
+const ESC = String.fromCharCode(0x1b);
+const BEL = String.fromCharCode(0x07);
 
 /**
  * @param {string} text
  */
 export function stripAnsi(text) {
-  return text
-    .replace(/\u001b\][^\u0007]*(?:\u0007|\u001b\\)/g, "")
-    .replace(/\u001b\[[0-9;?]*[ -/]*[@-~]/g, "");
+  const osc = new RegExp(`${ESC}\\][^${BEL}]*(?:${BEL}|${ESC}\\\\)`, "g");
+  const csi = new RegExp(`${ESC}\\[[0-9;?]*[ -/]*[@-~]`, "g");
+  return text.replace(osc, "").replace(csi, "");
 }
 
 /**
@@ -23,7 +25,7 @@ export function stripAnsi(text) {
  */
 export function consumeLocalUrl(carry, chunk) {
   const raw = carry + chunk;
-  const match = stripAnsi(raw).match(LOCAL_URL);
+  const match = LOCAL_URL.exec(stripAnsi(raw));
   if (match) return { url: match[1], carry: "" };
   return { url: null, carry: raw.slice(-CARRY_LIMIT) };
 }
@@ -33,7 +35,7 @@ export function consumeLocalUrl(carry, chunk) {
  * @returns {DevLink[]}
  */
 export function linksFor(origin) {
-  const base = origin.replace(/\/+$/, "");
+  const base = trimTrailingSlashes(origin);
   return [
     { key: "p", label: "preview", url: `${base}/fr` },
     { key: "l", label: "login", url: `${base}/fr/login` },
@@ -46,7 +48,18 @@ export function linksFor(origin) {
  * @param {string} label
  */
 export function hyperlink(url, label) {
-  return `\u001b]8;;${url}\u0007${label}\u001b]8;;\u0007`;
+  return `${ESC}]8;;${url}${BEL}${label}${ESC}]8;;${BEL}`;
+}
+
+/**
+ * @param {string} value
+ */
+function trimTrailingSlashes(value) {
+  let end = value.length;
+  while (end > 0 && value.endsWith("/", end)) {
+    end -= 1;
+  }
+  return value.slice(0, end);
 }
 
 /**
