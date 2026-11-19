@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useMemo, useState, type ReactNode, type RefObject } from "react";
+import { useDeferredValue, useId, useMemo, useState, type ReactNode, type RefObject } from "react";
 import { useFormatter, useTranslations } from "next-intl";
 import { Bell, Heart } from "lucide-react";
 import {
@@ -13,7 +13,7 @@ import {
 import { scalarString } from "@/lib/safe-string";
 import { DynamicParisMap } from "@/components/map/dynamic-map";
 import { recordsToMarkers } from "@/lib/opendata/markers";
-import { recordMatchesQuery } from "@/lib/opendata/search";
+import { buildSearchIndex, filterByQuery } from "@/lib/opendata/search";
 import { compareCellValues, columnAriaSort, type SortDir } from "@/lib/opendata/sort";
 import { SortColumnChevron } from "@/components/dashboard/sort-column-chevron";
 import { useFavoritesQuery, useToggleFavoriteMutation } from "@/lib/favorites-query";
@@ -55,6 +55,8 @@ type Props = {
   tableEnd?: ReactNode;
   /** Optional ref to the table scroll container (for IntersectionObserver root). */
   tableScrollRef?: RefObject<HTMLDivElement | null>;
+  /** Notified on every filter input change (e.g. to pause infinite loading while filtering). */
+  onQueryChange?: (query: string) => void;
 };
 
 function colorFor(scheme: ColorScheme | undefined, record: OpenDataRecord) {
@@ -308,6 +310,7 @@ export function ThemeExplorerClient({
   tableMaxHeight,
   tableEnd,
   tableScrollRef,
+  onQueryChange,
 }: Readonly<Props>) {
   const t = useTranslations("Explorer");
   const tCommon = useTranslations("Common");
@@ -330,17 +333,26 @@ export function ThemeExplorerClient({
     );
   }, [dataset.id, favoritesQuery.data]);
 
+  // Keep typing instant: the heavy table/map work runs on the deferred value.
+  const deferredQuery = useDeferredValue(query);
+
+  const recordsIndex = useMemo(
+    () => buildSearchIndex(records, dataset.columns),
+    [dataset.columns, records],
+  );
+  const mapIndex = useMemo(
+    () => (mapRecords ? buildSearchIndex(mapRecords, dataset.columns) : []),
+    [dataset.columns, mapRecords],
+  );
+
   const filtered = useMemo(
-    () => records.filter((record) => recordMatchesQuery(record, dataset.columns, query)),
-    [dataset.columns, query, records],
+    () => filterByQuery(records, recordsIndex, deferredQuery),
+    [deferredQuery, records, recordsIndex],
   );
 
   const filteredMap = useMemo(
-    () =>
-      mapRecords
-        ? mapRecords.filter((record) => recordMatchesQuery(record, dataset.columns, query))
-        : filtered,
-    [dataset.columns, filtered, mapRecords, query],
+    () => (mapRecords ? filterByQuery(mapRecords, mapIndex, deferredQuery) : filtered),
+    [deferredQuery, filtered, mapIndex, mapRecords],
   );
 
   const sorted = useMemo(() => {
@@ -455,6 +467,7 @@ export function ThemeExplorerClient({
           value={query}
           onChange={(event) => {
             setQuery(event.target.value);
+            onQueryChange?.(event.target.value);
             setPageIndex(0);
           }}
           placeholder={paginate ? t("filterPlaceholder") : t("filterLoadedPlaceholder")}

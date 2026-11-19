@@ -94,6 +94,7 @@ export function ParisMap({
         zoom={zoom}
         className="h-[420px] w-full"
         scrollWheelZoom
+        preferCanvas
       >
         <TileLayer key={tiles.url} attribution={tiles.attribution} url={tiles.url} />
         {onBounds ? <MapBounds onBounds={onBounds} /> : null}

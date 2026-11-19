@@ -210,6 +210,7 @@
     "alertError": "Impossible de créer cette alerte.",
     "loadingMore": "Chargement…",
     "loadMoreHint": "Faites défiler pour charger la suite.",
+    "loadMore": "Charger la suite",
     "alertColumn": "Alerte",
     "datasetTabs": "Jeux de données"
   },
