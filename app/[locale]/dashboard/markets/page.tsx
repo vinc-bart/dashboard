@@ -2,6 +2,7 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { DatasetNotice } from "@/components/dashboard/dataset-notice";
 import { InfiniteThemeExplorer } from "@/components/dashboard/infinite-theme-explorer";
 import { KpiStrip } from "@/components/dashboard/kpi-strip";
+import { FillPage } from "@/components/dashboard/fill-page";
 import { PageIntro } from "@/components/dashboard/page-intro";
 import { fetchCount, formatCount, joinWhere } from "@/lib/opendata/client";
 import { localizeExplorerDataset } from "@/lib/opendata/localize";
@@ -21,7 +22,7 @@ export default async function MarketsPage() {
   );
 
   return (
-    <div className="space-y-6">
+    <FillPage>
       <PageIntro title={t("title")} dataset={DATASETS.markets}>
         {t("body")}
       </PageIntro>
@@ -36,6 +37,7 @@ export default async function MarketsPage() {
         ]}
       />
       <InfiniteThemeExplorer
+        fill
         dataset={await localizeExplorerDataset(DATASETS.markets)}
         initial={loaded.table}
         mapRecords={loaded.markers.results}
@@ -43,6 +45,6 @@ export default async function MarketsPage() {
         initialError={loaded.ok ? null : loaded.error}
         descriptionKeys={["jours_tenue", "produit"]}
       />
-    </div>
+    </FillPage>
   );
 }

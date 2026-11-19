@@ -57,6 +57,8 @@ type Props = {
   tableScrollRef?: RefObject<HTMLDivElement | null>;
   /** Notified on every filter input change (e.g. to pause infinite loading while filtering). */
   onQueryChange?: (query: string) => void;
+  /** Fit the viewport on desktop: map and table share the height, the table scrolls inside. */
+  fill?: boolean;
 };
 
 function colorFor(scheme: ColorScheme | undefined, record: OpenDataRecord) {
@@ -91,27 +93,33 @@ function ExplorerMap(
     onBounds?: (bbox: { south: number; west: number; north: number; east: number }) => void;
     center?: { lat: number; lon: number };
     zoom?: number;
+    fill?: boolean;
   }>,
 ) {
   if (!props.hasGeoField) return null;
-  if (props.mapLoading) {
-    return (
-      <div
-        className="surface-panel flex h-[420px] items-center justify-center text-sm text-muted"
-        role="status"
-        aria-live="polite"
-      >
-        {props.loadingLabel}
-      </div>
-    );
-  }
-  return (
+  const map = props.mapLoading ? (
+    <div
+      className="surface-panel flex h-[420px] items-center justify-center text-sm text-muted"
+      role="status"
+      aria-live="polite"
+    >
+      {props.loadingLabel}
+    </div>
+  ) : (
     <DynamicParisMap
       markers={props.markers}
       onBounds={props.onBounds}
       center={props.center}
       zoom={props.zoom}
+      fill={props.fill}
     />
+  );
+  if (!props.fill) return map;
+  // The map (or its loading placeholder) and the table split the remaining height evenly.
+  return (
+    <div className="flex flex-col fill:min-h-28 fill:flex-1 fill:[&>*]:h-auto fill:[&>*]:min-h-0 fill:[&>*]:flex-1">
+      {map}
+    </div>
   );
 }
 
@@ -143,6 +151,7 @@ function ThemeExplorerTable(props: Readonly<{
   pageCount: number;
   currentPage: number;
   setPageIndex: (index: number) => void;
+  fill: boolean;
 }>) {
   const {
     dataset,
@@ -162,17 +171,22 @@ function ThemeExplorerTable(props: Readonly<{
     pageCount,
     currentPage,
     setPageIndex,
+    fill,
   } = props;
+  const scrollsInside = fill || Boolean(tableMaxHeight);
+  let scrollClass = "overflow-x-auto";
+  if (fill) scrollClass = "max-h-[28rem] overflow-auto fill:max-h-none fill:min-h-0 fill:flex-1";
+  else if (tableMaxHeight) scrollClass = "overflow-auto";
 
   return (
-    <Card className="p-0">
+    <Card className={fill ? "p-0 fill:flex fill:min-h-28 fill:flex-1 fill:flex-col" : "p-0"}>
       <div
         ref={tableScrollRef}
-        className={tableMaxHeight ? "overflow-auto" : "overflow-x-auto"}
-        style={tableMaxHeight ? { maxHeight: tableMaxHeight } : undefined}
+        className={scrollClass}
+        style={!fill && tableMaxHeight ? { maxHeight: tableMaxHeight } : undefined}
       >
         <table className="min-w-full text-left text-sm">
-          <thead className={`table-head ${tableMaxHeight ? "sticky top-0 z-10" : ""}`}>
+          <thead className={`table-head ${scrollsInside ? "sticky top-0 z-10" : ""}`}>
             <tr>
               <th className="w-12 px-3 py-2">
                 <span className="sr-only">{t("favoriteColumn")}</span>
@@ -311,6 +325,7 @@ export function ThemeExplorerClient({
   tableEnd,
   tableScrollRef,
   onQueryChange,
+  fill = false,
 }: Readonly<Props>) {
   const t = useTranslations("Explorer");
   const tCommon = useTranslations("Common");
@@ -457,7 +472,13 @@ export function ThemeExplorerClient({
   }
 
   return (
-    <div className="space-y-4">
+    <div
+      className={
+        fill
+          ? "space-y-4 fill:flex fill:min-h-0 fill:flex-1 fill:flex-col fill:space-y-0 fill:gap-3"
+          : "space-y-4"
+      }
+    >
       {!dataset.bbox ? (
         <CompareDistrictPanel datasetId={dataset.id} primaryCount={totalCount} />
       ) : null}
@@ -492,6 +513,7 @@ export function ThemeExplorerClient({
         onBounds={dataset.bbox ? onBbox : undefined}
         center={mapCenter}
         zoom={mapZoom}
+        fill={fill}
       />
       <ThemeExplorerTable
         dataset={dataset}
@@ -511,6 +533,7 @@ export function ThemeExplorerClient({
         pageCount={pageCount}
         currentPage={currentPage}
         setPageIndex={setPageIndex}
+        fill={fill}
       />
     </div>
   );

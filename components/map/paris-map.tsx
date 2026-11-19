@@ -28,6 +28,18 @@ const DARK_TILES = {
   attribution: CARTO_ATTRIBUTION,
 };
 
+/** Leaflet only listens to window resizes; the container also resizes when the layout flexes. */
+function MapResize() {
+  const map = useMap();
+  useEffect(() => {
+    const container = map.getContainer();
+    const observer = new ResizeObserver(() => map.invalidateSize());
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [map]);
+  return null;
+}
+
 function MapBounds({
   onBounds,
 }: Readonly<{
@@ -68,12 +80,15 @@ export function ParisMap({
   className = "",
   center = PARIS_CENTER,
   zoom = 12,
+  fill = false,
 }: Readonly<{
   markers: MapMarker[];
   onBounds?: (bbox: { south: number; west: number; north: number; east: number }) => void;
   className?: string;
   center?: { lat: number; lon: number };
   zoom?: number;
+  /** On desktop viewports, take the height the parent flex column gives instead of 420px. */
+  fill?: boolean;
 }>) {
   const dark = useHtmlDark();
   const t = useTranslations("Explorer");
@@ -82,7 +97,7 @@ export function ParisMap({
 
   return (
     <section
-      className={`surface-panel overflow-hidden ${className}`}
+      className={`surface-panel overflow-hidden ${fill ? "flex flex-col" : ""} ${className}`}
       aria-label={t("mapLabel")}
       aria-describedby={hintId}
     >
@@ -92,11 +107,12 @@ export function ParisMap({
       <MapContainer
         center={[center.lat, center.lon]}
         zoom={zoom}
-        className="h-[420px] w-full"
+        className={fill ? "h-[420px] w-full fill:h-auto fill:min-h-0 fill:flex-1" : "h-[420px] w-full"}
         scrollWheelZoom
         preferCanvas
       >
         <TileLayer key={tiles.url} attribution={tiles.attribution} url={tiles.url} />
+        <MapResize />
         {onBounds ? <MapBounds onBounds={onBounds} /> : null}
         {markers.map((marker) => (
           <CircleMarker

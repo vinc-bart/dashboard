@@ -86,6 +86,7 @@ export function InfiniteThemeExplorer({
   mapZoom,
   extraMarkers,
   refetchInterval,
+  fill = false,
   children,
 }: Readonly<{
   dataset: ExplorerDataset;
@@ -101,6 +102,8 @@ export function InfiniteThemeExplorer({
   mapZoom?: number;
   extraMarkers?: MapMarker[];
   refetchInterval?: number;
+  /** Fit the viewport on desktop (map + table share the height, table scrolls inside). */
+  fill?: boolean;
   children?: ReactNode | ((slot: InfiniteThemeSlot) => ReactNode);
 }>) {
   const t = useTranslations("Explorer");
@@ -190,7 +193,13 @@ export function InfiniteThemeExplorer({
   const childNode = typeof children === "function" ? children(slot) : children;
 
   return (
-    <div className="space-y-6">
+    <div
+      className={
+        fill
+          ? "space-y-6 fill:flex fill:min-h-0 fill:flex-1 fill:flex-col fill:space-y-0 fill:gap-4"
+          : "space-y-6"
+      }
+    >
       {errorMessage ? (
         <output className="block text-sm text-danger" aria-live="polite">
           {errorMessage}
@@ -210,6 +219,7 @@ export function InfiniteThemeExplorer({
         mapZoom={mapZoom}
         extraMarkers={extraMarkers}
         paginate={false}
+        fill={fill}
         tableMaxHeight="28rem"
         tableScrollRef={scrollRef}
         onQueryChange={(value) => setFiltering(value.trim() !== "")}

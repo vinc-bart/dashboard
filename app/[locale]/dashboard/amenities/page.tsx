@@ -3,6 +3,7 @@ import { DatasetNotice } from "@/components/dashboard/dataset-notice";
 import { DatasetTabs } from "@/components/dashboard/dataset-tabs";
 import { InfiniteThemeExplorer } from "@/components/dashboard/infinite-theme-explorer";
 import { KpiStrip } from "@/components/dashboard/kpi-strip";
+import { FillPage } from "@/components/dashboard/fill-page";
 import { PageIntro } from "@/components/dashboard/page-intro";
 import { fetchCount, formatCount } from "@/lib/opendata/client";
 import { localizeExplorerDataset } from "@/lib/opendata/localize";
@@ -28,7 +29,7 @@ export default async function AmenitiesPage({
   ]);
 
   return (
-    <div className="space-y-6">
+    <FillPage>
       <PageIntro title={t("title")} dataset={[DATASETS.fountains, DATASETS.toilets]}>
         {t("body")}
       </PageIntro>
@@ -49,6 +50,7 @@ export default async function AmenitiesPage({
         ]}
       />
       <InfiniteThemeExplorer
+        fill
         dataset={await localizeExplorerDataset(dataset)}
         initial={loaded.table}
         mapRecords={loaded.markers.results}
@@ -56,6 +58,6 @@ export default async function AmenitiesPage({
         initialError={loaded.ok ? null : loaded.error}
         colorScheme="status"
       />
-    </div>
+    </FillPage>
   );
 }
