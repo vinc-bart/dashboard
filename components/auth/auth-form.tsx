@@ -15,6 +15,7 @@ import { safeNext } from "@/lib/safe-next";
 import { formString } from "@/lib/safe-string";
 import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from "@/lib/password";
 import { PROFILE_NAME_MAX } from "@/lib/profile-name";
+import { OtpCodeField } from "@/components/auth/otp-code-field";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/input";
 
@@ -120,17 +121,7 @@ function AuthOtpStep({
       <p className="text-sm text-muted">{email ? t("otpSentTo", { email }) : t("otpSent")}</p>
       <div>
         <Label htmlFor="code">{t("code")}</Label>
-        <Input
-          id="code"
-          name="code"
-          inputMode="numeric"
-          autoComplete="one-time-code"
-          autoFocus
-          required
-          minLength={6}
-          maxLength={6}
-          pattern="[0-9]{6}"
-        />
+        <OtpCodeField disabled={pending} />
       </div>
       {error ? <p role="alert" className="text-sm text-danger">{error}</p> : null}
       {resent ? <p aria-live="polite" className="text-sm text-muted">{t("otpResent")}</p> : null}
