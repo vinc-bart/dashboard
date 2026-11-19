@@ -105,7 +105,8 @@ export function otpMail(otp: string, locale: AppLocale = "fr"): MailContent {
     preview: copy.otpPreview,
     bodyHtml: `<p style="margin:0 0 16px;">${escapeHtml(copy.otpBody)}</p>
 <p style="margin:0 0 16px;font-size:32px;letter-spacing:0.2em;font-weight:700;color:${NAVY};">${safeOtp}</p>
-<p style="margin:0;color:${MUTED};font-size:14px;">${escapeHtml(copy.otpExpiry)}</p>`,
+<p style="margin:0 0 16px;color:${MUTED};font-size:14px;">${escapeHtml(copy.otpExpiry)}</p>
+<p style="margin:0;color:${MUTED};font-size:14px;">${escapeHtml(copy.otpIgnore)}</p>`,
     bodyText: interpolate(copy.otpText, { otp }),
   });
 }

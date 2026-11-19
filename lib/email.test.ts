@@ -8,6 +8,7 @@ import {
   sendEmail,
   smtpOptions,
 } from "./email";
+import { otpTokenHeader } from "./email/otp-token";
 import {
   alertMail,
   changeEmailMail,
@@ -117,6 +118,20 @@ describe("logConsoleEmail", () => {
     await sendEmail(message, "console");
     expect(info).toHaveBeenCalledOnce();
   });
+
+  it("prints custom headers", () => {
+    const info = vi.spyOn(console, "info").mockImplementation(() => {});
+    logConsoleEmail(
+      {
+        ...message,
+        headers: { "OTP-Token": '"123456"; origin="http://localhost:3000"' },
+      },
+      "development",
+    );
+    expect(info).toHaveBeenCalledWith(
+      '[mail] To: hello@localhost\nSubject: Contact\nReply-To: ada@example.com\nOTP-Token: "123456"; origin="http://localhost:3000"\n\nBonjour',
+    );
+  });
 });
 
 describe("assertMailerConfig", () => {
@@ -163,11 +178,20 @@ describe("mail templates", () => {
 
   it("builds otp mail without putting the code in the subject", () => {
     const mail = otpMail("123456");
+    const ignore = "Si vous n’êtes pas à l’origine de cette demande, ignorez ce message.";
     expect(mail.subject).toBe("Votre code de connexion");
     expect(mail.subject).not.toContain("123456");
-    expect(mail.text).toContain("123456");
-    expect(mail.html).toContain("123456");
+    expect(mail.text).toBe(
+      ["123456", "", "Votre code de connexion Paris Ouverte.", "Il expire dans 3 minutes.", ignore].join(
+        "\n",
+      ),
+    );
+    expect(mail.html).toContain(">123456</p>");
     expect(mail.html).toContain("3 minutes");
+    expect(mail.html).toContain(ignore);
+    const preview = mail.html.match(/display:none[^>]*>([^<]*)</);
+    expect(preview?.[1]).toBe("Votre code expire dans 3 minutes.");
+    expect(preview?.[1]).not.toContain("123456");
   });
 
   it("builds change-email mail with escaped address", () => {
@@ -225,5 +249,43 @@ describe("mail templates", () => {
     });
     expect(mail.subject).not.toMatch(/[\r\n]/);
     expect(mail.subject).toContain("Nation Bcc:");
+  });
+
+  it("keeps the code out of the subject in every locale", () => {
+    for (const locale of ["fr", "en", "es"] as const) {
+      const mail = otpMail("123456", locale);
+      expect(mail.text.startsWith("123456\n")).toBe(true);
+      expect(mail.subject).not.toContain("123456");
+      expect(mail.html).toContain(">123456</p>");
+    }
+  });
+});
+
+describe("otpTokenHeader", () => {
+  it("canonicalizes an https origin and drops the default port", () => {
+    expect(otpTokenHeader("123456", "https://Dashboard.vvbb.fr/fr/login")).toBe(
+      '"123456"; origin="https://dashboard.vvbb.fr"',
+    );
+    expect(otpTokenHeader("123456", "https://dashboard.vvbb.fr:443")).toBe(
+      '"123456"; origin="https://dashboard.vvbb.fr"',
+    );
+    expect(otpTokenHeader("123456", "http://localhost:80/fr")).toBe(
+      '"123456"; origin="http://localhost"',
+    );
+    expect(otpTokenHeader("123456", "http://127.0.0.1:3000")).toBe(
+      '"123456"; origin="http://127.0.0.1:3000"',
+    );
+  });
+
+  it("omits the header when the origin is not trustworthy", () => {
+    expect(otpTokenHeader("123456", "http://evil.example")).toBeNull();
+    expect(otpTokenHeader("123456", undefined)).toBeNull();
+    expect(otpTokenHeader("123456", "not a url")).toBeNull();
+  });
+
+  it("escapes quotes in the code", () => {
+    expect(otpTokenHeader('ab"cd', "https://example.com")).toBe(
+      '"ab\\"cd"; origin="https://example.com"',
+    );
   });
 });
