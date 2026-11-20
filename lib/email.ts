@@ -9,6 +9,7 @@ export type SendEmailInput = {
   text: string;
   html: string;
   replyTo?: string;
+  headers?: Record<string, string>;
 };
 
 export function resolveMailerProvider(
@@ -84,6 +85,7 @@ async function sendWithMailpit(input: SendEmailInput) {
     text: input.text,
     html: input.html,
     replyTo: input.replyTo,
+    headers: input.headers,
   });
 }
 
@@ -96,6 +98,7 @@ async function sendWithResend(input: SendEmailInput) {
     text: input.text,
     html: input.html,
     replyTo: input.replyTo,
+    headers: input.headers,
   });
   if (error) {
     throw new Error(error.message);
@@ -110,8 +113,12 @@ export function logConsoleEmail(
   if (nodeEnv === "production") {
     throw new Error("MAILER_PROVIDER=console is not available in production");
   }
-  const reply = input.replyTo ? `\nReply-To: ${input.replyTo}` : "";
-  console.info(`[mail] To: ${input.to}\nSubject: ${input.subject}${reply}\n\n${input.text}`);
+  const lines = [
+    input.replyTo ? `Reply-To: ${input.replyTo}` : "",
+    ...Object.entries(input.headers ?? {}).map(([name, value]) => `${name}: ${value}`),
+  ].filter(Boolean);
+  const extra = lines.length ? `\n${lines.join("\n")}` : "";
+  console.info(`[mail] To: ${input.to}\nSubject: ${input.subject}${extra}\n\n${input.text}`);
 }
 
 /** Dev-server convenience. Production never prints the sign-in code. */

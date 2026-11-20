@@ -5,6 +5,7 @@ import { admin, twoFactor } from "better-auth/plugins";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { logDevSignInCode, sendEmail } from "@/lib/email";
+import { otpTokenHeader } from "@/lib/email/otp-token";
 import { withLocaleInAbsoluteUrl } from "@/i18n/path";
 import { mailLocale } from "@/lib/email/locale";
 import { changeEmailMail, otpMail, resetPasswordMail, verificationMail } from "@/lib/email/templates";
@@ -98,7 +99,12 @@ export const auth = betterAuth({
         sendOTP: async ({ user, otp }) => {
           logDevSignInCode(user.email, otp);
           const mail = otpMail(otp, await mailLocale());
-          await sendEmail({ to: user.email, ...mail });
+          const token = otpTokenHeader(otp, process.env.BETTER_AUTH_URL);
+          await sendEmail({
+            to: user.email,
+            ...mail,
+            ...(token ? { headers: { "OTP-Token": token } } : {}),
+          });
         },
       },
     }),
