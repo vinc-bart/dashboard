@@ -20,6 +20,9 @@ const SEARCHABLE: Searchable[] = [
   { config: DATASETS.events, href: "/dashboard/events", searchField: "title" },
   { config: DATASETS.markets, href: "/dashboard/markets", searchField: "nom_long" },
   { config: DATASETS.fountains, href: "/dashboard/amenities", searchField: "voie" },
+  { config: DATASETS.ratpFountains, href: "/dashboard/network", searchField: "station_ou_gare" },
+  { config: DATASETS.ratpToilets, href: "/dashboard/network?tab=toilets", searchField: "station" },
+  { config: DATASETS.ratpShops, href: "/dashboard/network?tab=shops", searchField: "dea_nom_commerce" },
 ];
 
 function escapeSearch(value: string) {
