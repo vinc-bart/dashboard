@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   parseSqualesNumber,
   squalesPoints,
+  squalesSelect,
   squalesStationById,
   squalesWindowWhere,
   type SqualesStation,
@@ -27,6 +28,14 @@ describe("parseSqualesNumber", () => {
     expect(parseSqualesNumber("<2")).toBeNull();
     expect(parseSqualesNumber("")).toBeNull();
     expect(parseSqualesNumber(null)).toBeNull();
+  });
+});
+
+describe("squalesSelect", () => {
+  it("quotes fields so a leading digit stays an identifier", () => {
+    expect(squalesSelect(squalesStationById("franklin"))).toBe(
+      "`dateheure`,`nofra1`,`n2fra1`,`10fra1`,`c2fra1`,`tfra1`,`hyfra1`",
+    );
   });
 });
 

@@ -171,8 +171,13 @@ export function squalesWindowWhere(latestIso: string): string | null {
   return `dateheure >= '${stamp}'`;
 }
 
+/** ODSQL reads a leading digit as a number, so `10fra1` must be a quoted identifier. */
+function quoteSqualesField(field: string): string {
+  return `\`${field.replaceAll("`", "")}\``;
+}
+
 export function squalesSelect(station: SqualesStation): string {
-  return ["dateheure", ...station.series.map((item) => item.field)].join(",");
+  return ["dateheure", ...station.series.map((item) => item.field)].map(quoteSqualesField).join(",");
 }
 
 export type SqualesPoint = {
