@@ -36,6 +36,7 @@
     "nature": "Naturaleza",
     "air": "Aire",
     "amenities": "Servicios",
+    "network": "Red",
     "events": "Eventos",
     "traffic": "Vías",
     "markets": "Mercados",
@@ -239,11 +240,15 @@
       },
       "air": {
         "title": "Aire",
-        "body": "Días por índice ATMO desde 2021."
+        "body": "Índice ATMO exterior y aire en los andenes."
       },
       "amenities": {
         "title": "Servicios",
         "body": "Fuentes de beber y aseos públicos."
+      },
+      "network": {
+        "title": "Red RATP",
+        "body": "Fuentes, aseos, desfibriladores y puntos de venta de la red."
       },
       "events": {
         "title": "Eventos",
@@ -276,18 +281,45 @@
     },
     "air": {
       "title": "Calidad del aire",
-      "body": "Número de días por clase de índice ATMO (Airparif), año a año. Sin mapa denso: este conjunto es estadístico.",
+      "body": "Índice ATMO anual en exterior (Airparif) y medias horarias en los andenes, red SQUALES (RATP). Sin mapa: estos conjuntos son estadísticos.",
       "latestYear": "Último año",
       "goodDays": "Días «buena»",
       "averageDays": "Días «media»",
       "badDays": "Días «mala»",
-      "chartTitle": "Días por índice ATMO"
+      "chartTitle": "Días por índice ATMO",
+      "outdoor": "Exterior",
+      "underground": "Subterráneo",
+      "station": "Estación",
+      "latestReading": "Última medida",
+      "pm10": "PM10",
+      "co2": "CO2",
+      "temperature": "Temperatura",
+      "undergroundChart": "Medias horarias · 7 últimos días publicados",
+      "hour": "Hora",
+      "noReadings": "Ninguna medida en este periodo.",
+      "series": {
+        "no": "NO",
+        "no2": "NO2",
+        "pm10": "PM10",
+        "pm25": "PM2.5",
+        "co2": "CO2",
+        "temp": "Temperatura",
+        "humi": "Humedad"
+      }
     },
     "amenities": {
       "title": "Servicios",
       "body": "Fuentes de beber Eau de Paris y aseos públicos (sanisettes).",
       "fountains": "Fuentes",
       "toilets": "Aseos"
+    },
+    "network": {
+      "title": "Servicios de la red",
+      "body": "Fuentes, aseos, desfibriladores y comercios autorizados de la red RATP, en Isla de Francia. La posición de fuentes y aseos es aproximada. Sin filtro por distrito.",
+      "fountains": "Fuentes",
+      "toilets": "Aseos",
+      "aed": "Desfibriladores",
+      "shops": "Comercios"
     },
     "events": {
       "title": "Eventos",
@@ -391,6 +423,7 @@
     "bikeTitle": "Pasos de bicicletas · rue Étienne Marcel (7 últimos días)",
     "passages": "Pasos",
     "airSummary": "Días por índice ATMO de {from} a {to}.",
+    "squalesSummary": "Medias horarias en {station}, del {from} al {to}.",
     "bikeSummary": "Pasos del {from} al {to}, máximo {peak}.",
     "empty": "No hay datos para el gráfico.",
     "keyboardHint": "El gráfico no se puede navegar con el teclado; las cifras se resumen arriba."
@@ -586,6 +619,44 @@
         "total": "Pasos",
         "vers_paris": "Hacia París",
         "vers_croix": "Hacia Croix de Chavaux"
+      }
+    },
+    "ratpFountains": {
+      "title": "Fuentes de la red",
+      "columns": {
+        "ligne": "Línea",
+        "station_ou_gare": "Estación",
+        "commune": "Municipio",
+        "en_zone_controlee_ou_non": "Zona controlada"
+      }
+    },
+    "ratpToilets": {
+      "title": "Aseos de la red",
+      "columns": {
+        "ligne": "Línea",
+        "station": "Estación",
+        "tarif_gratuit_payant": "Tarifa",
+        "en_zone_controlee": "Zona controlada",
+        "accessibilite_pmr_totale": "PMR"
+      }
+    },
+    "ratpAed": {
+      "title": "Desfibriladores de la red",
+      "columns": {
+        "adr_voie": "Dirección",
+        "com_nom": "Municipio",
+        "acc_lib": "Acceso",
+        "dispo_h": "Horarios"
+      }
+    },
+    "ratpShops": {
+      "title": "Comercios autorizados",
+      "columns": {
+        "dea_nom_commerce": "Comercio",
+        "tco_libelle": "Tipo",
+        "dea_rue_livraison": "Calle",
+        "dea_commune_livraison": "Municipio",
+        "dea_jour_fermeture": "Cierre"
       }
     }
   },

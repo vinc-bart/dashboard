@@ -10,6 +10,7 @@ Never fetch Open Data from the browser (CORS, rate limits, cache). Use `lib/open
 
 - Paris: `opendata.paris.fr` (`host` omitted or `"paris"`).
 - Montreuil: `data.montreuil.fr` (`host: "montreuil"`).
+- RATP: `data.ratp.fr` (`host: "ratp"`). Same Explore v2.1 contract. No real-time departures.
 - Explore v2.1 `limit` max is 100. Paginate with `fetchAllRecords` and a stable `orderBy` when `idField` is a scalar.
 - New datasets: add a `DatasetConfig` in `lib/opendata/datasets.ts`, then a page. Do not hardcode dataset ids in UI.
 - District filters live on `DatasetConfig.district`, not a switch on dataset id. Vélib’ uses station-code prefixes, not `nom_arrondissement_communes = 'Paris'`.
