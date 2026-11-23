@@ -12,7 +12,7 @@ const variants = {
 
 const sizes = {
   md: "h-11 px-5 text-sm",
-  sm: "h-8 px-3 text-xs",
+  sm: "h-9 px-3 text-xs",
 } as const;
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
