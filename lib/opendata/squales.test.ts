@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   parseSqualesNumber,
+  SQUALES_STATIONS,
   squalesPoints,
   squalesSelect,
   squalesStationById,
@@ -28,6 +29,28 @@ describe("parseSqualesNumber", () => {
     expect(parseSqualesNumber("<2")).toBeNull();
     expect(parseSqualesNumber("")).toBeNull();
     expect(parseSqualesNumber(null)).toBeNull();
+  });
+});
+
+describe("SQUALES_STATIONS", () => {
+  it("keeps the live PM10 field of each station", () => {
+    expect(
+      Object.fromEntries(
+        SQUALES_STATIONS.map((item) => [
+          item.id,
+          item.series.find((series) => series.key === "pm10")?.field,
+        ]),
+      ),
+    ).toEqual({
+      franklin: "10fra1",
+      chatelet: "10cha4",
+      "saint-germain": "10stger4",
+      iena: "10iena9",
+      auber: "10auba",
+      "chatelet-rer": "10chata",
+      nation: "10nata",
+      luxembourg: "10luxb",
+    });
   });
 });
 

@@ -22,12 +22,33 @@ export type SqualesStation = {
 
 const RATP_DATASET = "https://data.ratp.fr/explore/dataset";
 
+const SERIES_ORDER = ["no", "no2", "pm10", "pm25", "co2", "temp", "humi"] as const;
+
+const SERIES_AXIS: Record<SqualesSeriesKey, SqualesAxis> = {
+  no: "pollutant",
+  no2: "pollutant",
+  pm10: "pollutant",
+  pm25: "pollutant",
+  co2: "co2",
+  temp: "climate",
+  humi: "climate",
+};
+
+/** `pm10:10fra1 temp:tfra1` in series order. Missing keys are stations that do not publish that measure. */
+function seriesFrom(spec: string): SqualesSeries[] {
+  const fields = new Map(spec.split(" ").map((part) => part.split(":") as [string, string]));
+  return SERIES_ORDER.flatMap((key) => {
+    const field = fields.get(key);
+    return field ? [{ field, key, axis: SERIES_AXIS[key] }] : [];
+  });
+}
+
 function station(
   id: string,
   datasetId: string,
   name: string,
   line: string,
-  series: SqualesSeries[],
+  spec: string,
 ): SqualesStation {
   return {
     id,
@@ -35,112 +56,29 @@ function station(
     name,
     line,
     sourceUrl: `${RATP_DATASET}/${datasetId}/`,
-    series,
+    series: seriesFrom(spec),
   };
 }
 
-/** Live SQUALES stations still published in 2026. Frozen 2013–2020 sets are omitted. */
-export const SQUALES_STATIONS: SqualesStation[] = [
-  station(
-    "franklin",
-    "qualite-de-lair-mesuree-dans-la-station-franklin-d-roosevelt-2021-maintenant",
-    "Franklin D. Roosevelt",
-    "M1",
-    [
-      { field: "nofra1", key: "no", axis: "pollutant" },
-      { field: "n2fra1", key: "no2", axis: "pollutant" },
-      { field: "10fra1", key: "pm10", axis: "pollutant" },
-      { field: "c2fra1", key: "co2", axis: "co2" },
-      { field: "tfra1", key: "temp", axis: "climate" },
-      { field: "hyfra1", key: "humi", axis: "climate" },
-    ],
-  ),
-  station(
-    "chatelet",
-    "qualite-de-lair-mesuree-dans-la-station-chatelet-2021-maintenant",
-    "Châtelet",
-    "M4",
-    [
-      { field: "nocha4", key: "no", axis: "pollutant" },
-      { field: "n2cha4", key: "no2", axis: "pollutant" },
-      { field: "10cha4", key: "pm10", axis: "pollutant" },
-      { field: "c2cha4", key: "co2", axis: "co2" },
-      { field: "tcha4", key: "temp", axis: "climate" },
-      { field: "hycha4", key: "humi", axis: "climate" },
-    ],
-  ),
-  station(
-    "saint-germain",
-    "qualite-de-lair-mesuree-dans-la-station-saint-germain-des-pres-de-2024-a-nos-jours-",
-    "Saint-Germain-des-Prés",
-    "M4",
-    [
-      { field: "10stger4", key: "pm10", axis: "pollutant" },
-      { field: "tstger4", key: "temp", axis: "climate" },
-      { field: "hystger4", key: "humi", axis: "climate" },
-    ],
-  ),
-  station(
-    "iena",
-    "qualite-de-lair-mesuree-dans-la-station-iena-de-2025-a-nos-jours",
-    "Iéna",
-    "M9",
-    [
-      { field: "10iena9", key: "pm10", axis: "pollutant" },
-      { field: "tiena9", key: "temp", axis: "climate" },
-      { field: "hiena9", key: "humi", axis: "climate" },
-    ],
-  ),
-  station(
-    "auber",
-    "qualite-de-lair-mesuree-dans-la-station-auber-2021-a-nos-jours",
-    "Auber",
-    "RER A",
-    [
-      { field: "noauba", key: "no", axis: "pollutant" },
-      { field: "n2auba", key: "no2", axis: "pollutant" },
-      { field: "10auba", key: "pm10", axis: "pollutant" },
-      { field: "25auba", key: "pm25", axis: "pollutant" },
-      { field: "c2auba", key: "co2", axis: "co2" },
-      { field: "tauba", key: "temp", axis: "climate" },
-      { field: "hyauba", key: "humi", axis: "climate" },
-    ],
-  ),
-  station(
-    "chatelet-rer",
-    "qualite-de-lair-mesuree-dans-la-station-chatelet-rer-a0",
-    "Châtelet",
-    "RER A",
-    [
-      { field: "10chata", key: "pm10", axis: "pollutant" },
-      { field: "tchata", key: "temp", axis: "climate" },
-      { field: "hychata", key: "humi", axis: "climate" },
-    ],
-  ),
-  station(
-    "nation",
-    "qualite-de-lair-mesuree-dans-la-station-nation-rer-a0",
-    "Nation",
-    "RER A",
-    [
-      { field: "10nata", key: "pm10", axis: "pollutant" },
-      { field: "25nata", key: "pm25", axis: "pollutant" },
-      { field: "tnata", key: "temp", axis: "climate" },
-      { field: "hynata", key: "humi", axis: "climate" },
-    ],
-  ),
-  station(
-    "luxembourg",
-    "qualite-de-lair-mesuree-dans-la-gare-luxembourg",
-    "Luxembourg",
-    "RER B",
-    [
-      { field: "10luxb", key: "pm10", axis: "pollutant" },
-      { field: "tluxb", key: "temp", axis: "climate" },
-      { field: "hluxb", key: "humi", axis: "climate" },
-    ],
-  ),
+/**
+ * Live SQUALES stations still published in 2026. Frozen 2013–2020 sets are omitted.
+ * One row per station: id|dataset|name|line|fields. Repeated objects were flagged as duplication.
+ */
+const STATION_ROWS = [
+  "franklin|qualite-de-lair-mesuree-dans-la-station-franklin-d-roosevelt-2021-maintenant|Franklin D. Roosevelt|M1|no:nofra1 no2:n2fra1 pm10:10fra1 co2:c2fra1 temp:tfra1 humi:hyfra1",
+  "chatelet|qualite-de-lair-mesuree-dans-la-station-chatelet-2021-maintenant|Châtelet|M4|no:nocha4 no2:n2cha4 pm10:10cha4 co2:c2cha4 temp:tcha4 humi:hycha4",
+  "saint-germain|qualite-de-lair-mesuree-dans-la-station-saint-germain-des-pres-de-2024-a-nos-jours-|Saint-Germain-des-Prés|M4|pm10:10stger4 temp:tstger4 humi:hystger4",
+  "iena|qualite-de-lair-mesuree-dans-la-station-iena-de-2025-a-nos-jours|Iéna|M9|pm10:10iena9 temp:tiena9 humi:hiena9",
+  "auber|qualite-de-lair-mesuree-dans-la-station-auber-2021-a-nos-jours|Auber|RER A|no:noauba no2:n2auba pm10:10auba pm25:25auba co2:c2auba temp:tauba humi:hyauba",
+  "chatelet-rer|qualite-de-lair-mesuree-dans-la-station-chatelet-rer-a0|Châtelet|RER A|pm10:10chata temp:tchata humi:hychata",
+  "nation|qualite-de-lair-mesuree-dans-la-station-nation-rer-a0|Nation|RER A|pm10:10nata pm25:25nata temp:tnata humi:hynata",
+  "luxembourg|qualite-de-lair-mesuree-dans-la-gare-luxembourg|Luxembourg|RER B|pm10:10luxb temp:tluxb humi:hluxb",
 ];
+
+export const SQUALES_STATIONS: SqualesStation[] = STATION_ROWS.map((row) => {
+  const [id, datasetId, name, line, spec] = row.split("|");
+  return station(id ?? "", datasetId ?? "", name ?? "", line ?? "", spec ?? "");
+});
 
 export const SQUALES_REVALIDATE = 3600;
 export const SQUALES_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
