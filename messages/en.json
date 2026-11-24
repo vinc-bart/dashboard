@@ -36,6 +36,7 @@
     "nature": "Nature",
     "air": "Air",
     "amenities": "Amenities",
+    "network": "Network",
     "events": "Events",
     "traffic": "Streets",
     "markets": "Markets",
@@ -239,11 +240,15 @@
       },
       "air": {
         "title": "Air",
-        "body": "Days by ATMO index since 2021."
+        "body": "Outdoor ATMO index and platform air."
       },
       "amenities": {
         "title": "Amenities",
         "body": "Drinking fountains and public toilets."
+      },
+      "network": {
+        "title": "RATP network",
+        "body": "Fountains, toilets, defibrillators and ticket shops on the network."
       },
       "events": {
         "title": "Events",
@@ -276,18 +281,45 @@
     },
     "air": {
       "title": "Air quality",
-      "body": "Number of days per ATMO index class (Airparif), year by year. No dense map: this dataset is statistical.",
+      "body": "Yearly outdoor ATMO index (Airparif) and hourly platform readings from the RATP SQUALES network. No map: these datasets are statistical.",
       "latestYear": "Latest year",
       "goodDays": "“Good” days",
       "averageDays": "“Fair” days",
       "badDays": "“Poor” days",
-      "chartTitle": "Days by ATMO index"
+      "chartTitle": "Days by ATMO index",
+      "outdoor": "Outdoor",
+      "underground": "Underground",
+      "station": "Station",
+      "latestReading": "Latest reading",
+      "pm10": "PM10",
+      "co2": "CO2",
+      "temperature": "Temperature",
+      "undergroundChart": "Hourly means · last 7 published days",
+      "hour": "Hour",
+      "noReadings": "No readings in this period.",
+      "series": {
+        "no": "NO",
+        "no2": "NO2",
+        "pm10": "PM10",
+        "pm25": "PM2.5",
+        "co2": "CO2",
+        "temp": "Temperature",
+        "humi": "Humidity"
+      }
     },
     "amenities": {
       "title": "Amenities",
       "body": "Eau de Paris drinking fountains and public toilets (sanisettes).",
       "fountains": "Fountains",
       "toilets": "Toilets"
+    },
+    "network": {
+      "title": "Network amenities",
+      "body": "Fountains, toilets, defibrillators and approved shops on the RATP network, across Île-de-France. Fountain and toilet positions are approximate. No arrondissement filter.",
+      "fountains": "Fountains",
+      "toilets": "Toilets",
+      "aed": "Defibrillators",
+      "shops": "Shops"
     },
     "events": {
       "title": "Events",
@@ -391,6 +423,7 @@
     "bikeTitle": "Bike counts · rue Étienne Marcel (last 7 days)",
     "passages": "Passages",
     "airSummary": "ATMO index days from {from} to {to}.",
+    "squalesSummary": "Hourly means at {station}, from {from} to {to}.",
     "bikeSummary": "Passages from {from} to {to}, peak {peak}.",
     "empty": "No data to chart.",
     "keyboardHint": "The chart is not keyboard-navigable; figures are summarised above."
@@ -586,6 +619,44 @@
         "total": "Passages",
         "vers_paris": "Towards Paris",
         "vers_croix": "Towards Croix de Chavaux"
+      }
+    },
+    "ratpFountains": {
+      "title": "Network fountains",
+      "columns": {
+        "ligne": "Line",
+        "station_ou_gare": "Station",
+        "commune": "Municipality",
+        "en_zone_controlee_ou_non": "Paid area"
+      }
+    },
+    "ratpToilets": {
+      "title": "Network toilets",
+      "columns": {
+        "ligne": "Line",
+        "station": "Station",
+        "tarif_gratuit_payant": "Fare",
+        "en_zone_controlee": "Paid area",
+        "accessibilite_pmr_totale": "Step-free"
+      }
+    },
+    "ratpAed": {
+      "title": "Network defibrillators",
+      "columns": {
+        "adr_voie": "Address",
+        "com_nom": "Municipality",
+        "acc_lib": "Access",
+        "dispo_h": "Hours"
+      }
+    },
+    "ratpShops": {
+      "title": "Approved shops",
+      "columns": {
+        "dea_nom_commerce": "Shop",
+        "tco_libelle": "Type",
+        "dea_rue_livraison": "Street",
+        "dea_commune_livraison": "Municipality",
+        "dea_jour_fermeture": "Closed"
       }
     }
   },

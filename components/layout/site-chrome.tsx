@@ -29,7 +29,7 @@ function CompactAction({
       href={href}
       variant={variant}
       size="sm"
-      className="header-morph px-3 group-data-[compact=true]/header:px-2"
+      className="header-morph px-3 group-data-[compact=true]/header:h-8 group-data-[compact=true]/header:px-2"
     >
       <MorphSlot when="compact">
         <Icon className="size-4" aria-hidden />

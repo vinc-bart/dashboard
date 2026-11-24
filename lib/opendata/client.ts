@@ -39,7 +39,7 @@ export function formatCount(
   return result.ok ? formatNumber(result.count) : fallback;
 }
 
-export type OpenDataHost = "paris" | "montreuil";
+export type OpenDataHost = "paris" | "montreuil" | "ratp";
 
 export type DatasetConfig = {
   id: string;
@@ -86,6 +86,7 @@ export function toExplorerDataset(dataset: DatasetConfig): ExplorerDataset {
 const HOSTS: Record<OpenDataHost, string> = {
   paris: "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets",
   montreuil: "https://data.montreuil.fr/api/explore/v2.1/catalog/datasets",
+  ratp: "https://data.ratp.fr/api/explore/v2.1/catalog/datasets",
 };
 
 const MAX_PAGE = 100;

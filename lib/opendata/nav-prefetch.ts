@@ -7,4 +7,10 @@ export const NAV_PREFETCH_DATASETS: Record<string, string[]> = {
   "/dashboard/markets": [DATASETS.markets.id],
   "/dashboard/amenities": [DATASETS.fountains.id, DATASETS.toilets.id],
   "/dashboard/air": [DATASETS.air.id],
+  "/dashboard/network": [
+    DATASETS.ratpFountains.id,
+    DATASETS.ratpToilets.id,
+    DATASETS.ratpAed.id,
+    DATASETS.ratpShops.id,
+  ],
 };

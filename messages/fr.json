@@ -36,6 +36,7 @@
     "nature": "Nature",
     "air": "Air",
     "amenities": "Commodités",
+    "network": "Réseau",
     "events": "Événements",
     "traffic": "Voirie",
     "markets": "Marchés",
@@ -239,11 +240,15 @@
       },
       "air": {
         "title": "Air",
-        "body": "Jours par indice ATMO depuis 2021."
+        "body": "Indice ATMO en extérieur et air des quais."
       },
       "amenities": {
         "title": "Commodités",
         "body": "Fontaines à boire et toilettes publiques."
+      },
+      "network": {
+        "title": "Réseau RATP",
+        "body": "Fontaines, toilettes, défibrillateurs et points de vente du réseau."
       },
       "events": {
         "title": "Événements",
@@ -276,18 +281,45 @@
     },
     "air": {
       "title": "Qualité de l’air",
-      "body": "Nombre de jours par classe d’indice ATMO (Airparif), année par année. Pas de carte dense : ce jeu est statistique.",
+      "body": "Indice ATMO annuel en extérieur (Airparif) et moyennes horaires des quais, réseau SQUALES (RATP). Pas de carte : ces jeux sont statistiques.",
       "latestYear": "Dernière année",
       "goodDays": "Jours « bonne »",
       "averageDays": "Jours « moyenne »",
       "badDays": "Jours « mauvaise »",
-      "chartTitle": "Jours par indice ATMO"
+      "chartTitle": "Jours par indice ATMO",
+      "outdoor": "Extérieur",
+      "underground": "Souterrain",
+      "station": "Station",
+      "latestReading": "Dernière mesure",
+      "pm10": "PM10",
+      "co2": "CO2",
+      "temperature": "Température",
+      "undergroundChart": "Moyennes horaires · 7 derniers jours publiés",
+      "hour": "Heure",
+      "noReadings": "Aucune mesure sur cette période.",
+      "series": {
+        "no": "NO",
+        "no2": "NO2",
+        "pm10": "PM10",
+        "pm25": "PM2.5",
+        "co2": "CO2",
+        "temp": "Température",
+        "humi": "Humidité"
+      }
     },
     "amenities": {
       "title": "Commodités",
       "body": "Fontaines à boire Eau de Paris et toilettes publiques (sanisettes).",
       "fountains": "Fontaines",
       "toilets": "Toilettes"
+    },
+    "network": {
+      "title": "Commodités du réseau",
+      "body": "Fontaines, toilettes, défibrillateurs et commerces agréés du réseau RATP, en Île-de-France. Les positions des fontaines et des toilettes sont approximatives. Pas de filtre par arrondissement.",
+      "fountains": "Fontaines",
+      "toilets": "Toilettes",
+      "aed": "Défibrillateurs",
+      "shops": "Commerces"
     },
     "events": {
       "title": "Événements",
@@ -391,6 +423,7 @@
     "bikeTitle": "Passages vélos · rue Étienne Marcel (7 derniers jours)",
     "passages": "Passages",
     "airSummary": "Jours par indice ATMO de {from} à {to}.",
+    "squalesSummary": "Moyennes horaires à {station}, du {from} au {to}.",
     "bikeSummary": "Passages du {from} au {to}, pic {peak}.",
     "empty": "Aucune donnée à afficher.",
     "keyboardHint": "Le graphique n’est pas navigable au clavier ; les chiffres sont résumés ci-dessus."
@@ -586,6 +619,44 @@
         "total": "Passages",
         "vers_paris": "Vers Paris",
         "vers_croix": "Vers Croix de Chavaux"
+      }
+    },
+    "ratpFountains": {
+      "title": "Fontaines du réseau",
+      "columns": {
+        "ligne": "Ligne",
+        "station_ou_gare": "Station",
+        "commune": "Commune",
+        "en_zone_controlee_ou_non": "Zone contrôlée"
+      }
+    },
+    "ratpToilets": {
+      "title": "Toilettes du réseau",
+      "columns": {
+        "ligne": "Ligne",
+        "station": "Station",
+        "tarif_gratuit_payant": "Tarif",
+        "en_zone_controlee": "Zone contrôlée",
+        "accessibilite_pmr_totale": "PMR"
+      }
+    },
+    "ratpAed": {
+      "title": "Défibrillateurs du réseau",
+      "columns": {
+        "adr_voie": "Adresse",
+        "com_nom": "Commune",
+        "acc_lib": "Accès",
+        "dispo_h": "Horaires"
+      }
+    },
+    "ratpShops": {
+      "title": "Commerces agréés",
+      "columns": {
+        "dea_nom_commerce": "Commerce",
+        "tco_libelle": "Type",
+        "dea_rue_livraison": "Rue",
+        "dea_commune_livraison": "Commune",
+        "dea_jour_fermeture": "Fermeture"
       }
     }
   },
