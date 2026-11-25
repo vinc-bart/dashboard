@@ -19,14 +19,18 @@ import { SortColumnChevron } from "@/components/dashboard/sort-column-chevron";
 import { useFavoritesQuery, useToggleFavoriteMutation } from "@/lib/favorites-query";
 import type { FavoriteDto } from "@/lib/favorites";
 import { DATASETS } from "@/lib/opendata/datasets";
+import {
+  colorFor,
+  MARKER_COLORS,
+  type ColorScheme,
+} from "@/lib/opendata/marker-colors";
+import { MapLegend } from "@/components/dashboard/map-legend";
 import { CompareDistrictPanel } from "@/components/dashboard/compare-district-panel";
 import { useNotify } from "@/components/dashboard/notifications";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import type { MapMarker } from "@/lib/opendata/markers";
-
-type ColorScheme = "velib" | "status";
 
 const PAGE_SIZE = 10;
 
@@ -59,21 +63,6 @@ type Props = {
   onQueryChange?: (query: string) => void;
 };
 
-function colorFor(scheme: ColorScheme | undefined, record: OpenDataRecord) {
-  if (scheme === "velib") {
-    const bikes = Number(record.numbikesavailable ?? 0);
-    if (bikes <= 0) return "#c8102e";
-    if (bikes < 5) return "#fd7e14";
-    return "#2f9e44";
-  }
-  if (scheme === "status") {
-    const value = scalarString(record.dispo ?? record.statut).toLowerCase();
-    if (value.includes("non") || value.includes("hors")) return "#c8102e";
-    return "#2f9e44";
-  }
-  return undefined;
-}
-
 function describe(record: OpenDataRecord, keys?: string[]) {
   if (!keys?.length) return undefined;
   return keys
@@ -88,30 +77,41 @@ function ExplorerMap(
     mapLoading: boolean;
     loadingLabel: string;
     markers: MapMarker[];
+    colorScheme?: ColorScheme;
+    extraMarkers?: MapMarker[];
     onBounds?: (bbox: { south: number; west: number; north: number; east: number }) => void;
     center?: { lat: number; lon: number };
     zoom?: number;
   }>,
 ) {
   if (!props.hasGeoField) return null;
+  const legend = (
+    <MapLegend colorScheme={props.colorScheme} extraMarkers={props.extraMarkers} />
+  );
   if (props.mapLoading) {
     return (
-      <div
-        className="surface-panel flex h-[420px] items-center justify-center text-sm text-muted"
-        role="status"
-        aria-live="polite"
-      >
-        {props.loadingLabel}
+      <div className="space-y-3">
+        <div
+          className="surface-panel flex h-[420px] items-center justify-center text-sm text-muted"
+          role="status"
+          aria-live="polite"
+        >
+          {props.loadingLabel}
+        </div>
+        {legend}
       </div>
     );
   }
   return (
-    <DynamicParisMap
-      markers={props.markers}
-      onBounds={props.onBounds}
-      center={props.center}
-      zoom={props.zoom}
-    />
+    <div className="space-y-3">
+      <DynamicParisMap
+        markers={props.markers}
+        onBounds={props.onBounds}
+        center={props.center}
+        zoom={props.zoom}
+      />
+      {legend}
+    </div>
   );
 }
 
@@ -375,7 +375,7 @@ export function ThemeExplorerClient({
             idField: dataset.idField,
             titleField: dataset.titleField,
             geoField: dataset.geoField,
-            color: (record) => colorFor(colorScheme, record) ?? "#12263a",
+            color: (record) => colorFor(colorScheme, record) ?? MARKER_COLORS.record,
             description: (record) => describe(record, descriptionKeys) ?? "",
           })
         : [],
@@ -489,6 +489,8 @@ export function ThemeExplorerClient({
         mapLoading={mapLoading}
         loadingLabel={tCommon("mapLoading")}
         markers={[...markers, ...extraMarkers]}
+        colorScheme={colorScheme}
+        extraMarkers={extraMarkers}
         onBounds={dataset.bbox ? onBbox : undefined}
         center={mapCenter}
         zoom={mapZoom}
