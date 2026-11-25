@@ -44,6 +44,14 @@ DATA_DIR=./data BETTER_AUTH_URL=http://localhost:3000 pnpm db:seed-demo
 
 Use `pnpm db:seed-demo -- --reset` to remove `@seed.local` users and any `seed-*` demo rows, then reseed. Seed accounts are for admin viewing only (no login password).
 
+To sign in from a browser without Mailpit, create one local user. Set `DEV_LOGIN_PASSWORD` in `.env.local` (8 to 128 characters, never commit it), then:
+
+```bash
+pnpm db:dev-login
+```
+
+The command refuses to run when `NODE_ENV=production`, when `TURSO_DATABASE_URL` is set, or when `BETTER_AUTH_URL` is not localhost. If `.env.local` points at Turso, empty that variable for this command only: `TURSO_DATABASE_URL= TURSO_AUTH_TOKEN= pnpm db:dev-login`. Sign in as `agent@localhost`. In development the one-time code is printed in the `pnpm dev` log as `[dev] Sign-in code for agent@localhost: …`, even with Mailpit configured. The dev server has to be using this same SQLite file.
+
 `pnpm test` and `pnpm lint` before pushing. `pnpm test` is Vitest: helper unit tests, i18n key parity, the Open Data records API, favorite/profile actions against a temp SQLite file, and a few Testing Library checks. After `pnpm build`, `pnpm test:e2e` runs Playwright smokes (landing, locale switch, login error, seeded dashboard, Nature tabs, Vélib’ filter/favorites, profile save) plus axe on landing, login, and dashboard. First time locally: `pnpm exec playwright install --with-deps chromium`.
 
 Dependabot opens weekly PRs for npm and GitHub Actions. CI runs `pnpm audit` as a warning (it does not fail the job). [`.github/workflows/uptime.yml`](.github/workflows/uptime.yml) curls [dashboard.vvbb.fr/fr](https://dashboard.vvbb.fr/fr) every hour; a failed run is the alert.
