@@ -1,9 +1,14 @@
+import { Link } from "@/i18n/navigation";
 import { DynamicBikeCountChart } from "@/components/dashboard/dynamic-bike-count-chart";
 import { DatasetNotice } from "@/components/dashboard/dataset-notice";
 import { DatasetTabs } from "@/components/dashboard/dataset-tabs";
+import { DeparturesBoard } from "@/components/dashboard/departures-board";
 import { InfiniteThemeExplorer } from "@/components/dashboard/infinite-theme-explorer";
 import { KpiStrip } from "@/components/dashboard/kpi-strip";
 import { PageIntro } from "@/components/dashboard/page-intro";
+import { Card } from "@/components/ui/card";
+import { fetchLine9Departures } from "@/lib/idfm/client";
+import { line9StopBySlug } from "@/lib/idfm/stops";
 import { fetchAggregate, fetchAllRecords, fetchCount, formatCount } from "@/lib/opendata/client";
 import { isoDateDaysAgo } from "@/lib/opendata/dates";
 import {
@@ -50,24 +55,27 @@ export default async function MontreuilPage({
     tab === "trees" || tab === "gardens" || tab === "water" || tab === "bikes" ? tab : "velib";
   const since = isoDateDaysAgo(7);
 
-  const [velibCount, velibAgg, treeCount, gardenCount, eventCount, tabData] = await Promise.all([
-    fetchCount(DATASETS.velib.id, DATASETS.velib.revalidate, MONTREUIL_VELIB),
-    fetchAggregate<{ bikes?: number }>(
-      DATASETS.velib.id,
-      "sum(numbikesavailable) as bikes",
-      DATASETS.velib.revalidate,
-      { where: MONTREUIL_VELIB },
-    ),
-    fetchCount(DATASETS.montreuilTrees.id, DATASETS.montreuilTrees.revalidate, undefined, "montreuil"),
-    fetchCount(
-      DATASETS.montreuilGardens.id,
-      DATASETS.montreuilGardens.revalidate,
-      undefined,
-      "montreuil",
-    ),
-    fetchCount(DATASETS.events.id, DATASETS.events.revalidate, `address_zipcode = '93100'`),
-    loadMontreuilTab(active, session.user.id, since),
-  ]);
+  const robespierre = line9StopBySlug("robespierre");
+  const [velibCount, velibAgg, treeCount, gardenCount, eventCount, tabData, departures] =
+    await Promise.all([
+      fetchCount(DATASETS.velib.id, DATASETS.velib.revalidate, MONTREUIL_VELIB),
+      fetchAggregate<{ bikes?: number }>(
+        DATASETS.velib.id,
+        "sum(numbikesavailable) as bikes",
+        DATASETS.velib.revalidate,
+        { where: MONTREUIL_VELIB },
+      ),
+      fetchCount(DATASETS.montreuilTrees.id, DATASETS.montreuilTrees.revalidate, undefined, "montreuil"),
+      fetchCount(
+        DATASETS.montreuilGardens.id,
+        DATASETS.montreuilGardens.revalidate,
+        undefined,
+        "montreuil",
+      ),
+      fetchCount(DATASETS.events.id, DATASETS.events.revalidate, `address_zipcode = '93100'`),
+      loadMontreuilTab(active, session.user.id, since),
+      fetchLine9Departures("robespierre"),
+    ]);
 
   const bikes = Number(velibAgg.page.results[0]?.bikes ?? 0);
   const extraMarkers = MONTREUIL_LANDMARKS.map((item) => {
@@ -107,7 +115,8 @@ export default async function MontreuilPage({
           velibCount.error ||
           treeCount.error ||
           gardenCount.error ||
-          eventCount.error
+          eventCount.error ||
+          (departures.ok ? undefined : departures.error)
         }
       />
       <KpiStrip
@@ -122,6 +131,19 @@ export default async function MontreuilPage({
           { label: t("kpiEvents"), value: formatCount(eventCount, (value) => format.number(value)) },
         ]}
       />
+      <Card>
+        <div className="flex flex-wrap items-baseline justify-between gap-3">
+          <SectionTitle>{t("departuresTitle")}</SectionTitle>
+          <Link
+            href="/dashboard/transports?stop=robespierre"
+            className="text-sm text-heading hover:underline focus-field"
+          >
+            {t("departuresLink")}
+          </Link>
+        </div>
+        {robespierre ? <p className="mt-1 text-sm text-muted">{robespierre.label}</p> : null}
+        <DeparturesBoard stop="robespierre" initial={departures} compact />
+      </Card>
       <DatasetTabs
         active={activeHref}
         tabs={[
