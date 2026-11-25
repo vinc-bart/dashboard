@@ -14,7 +14,7 @@ docker compose up -d mailpit
 cp .env.example .env.local
 ```
 
-Set `BETTER_AUTH_SECRET` in `.env.local` (`openssl rand -base64 32`). Keep `MAILER_PROVIDER=mailpit`, or set `MAILER_PROVIDER=console` to print mail in the dev terminal instead of starting Docker. For the map, paste the same free CARTO key into `NEXT_PUBLIC_CARTO_API_KEY` (see Production). Then:
+Set `BETTER_AUTH_SECRET` in `.env.local` (`openssl rand -base64 32`). Keep `MAILER_PROVIDER=mailpit`, or set `MAILER_PROVIDER=console` to print mail in the dev terminal instead of starting Docker. For the map, paste the same free CARTO key into `NEXT_PUBLIC_CARTO_API_KEY` (see Production). Line 9 departures need a server-only `IDFM_API_KEY` from [PRIM](https://prim.iledefrance-mobilites.fr/). Then:
 
 ```bash
 pnpm dev
@@ -110,6 +110,7 @@ Local, CI, and the Docker image still use a SQLite file. The image entrypoint `c
    | `NEW_RELIC_LICENSE_KEY` | optional; leave empty on Vercel (the agent expects a long-lived process) |
    | `HEALTHCHECKS_PING_URL` | optional; healthchecks.io ping URL for the alerts cron |
    | `NEXT_PUBLIC_CARTO_API_KEY` | free CARTO basemap key ([request](https://carto.com/basemaps/apikey/)); same value as `.env.local`. Inlined at build time — redeploy after setting it |
+   | `IDFM_API_KEY` | optional; Île-de-France Mobilités PRIM key for line 9 departures. Server only — leave empty to hide live times |
 
    Empty observability variables leave each tool disabled. The app builds and runs without them. `DATA_DIR` is unused when `TURSO_DATABASE_URL` is set.
 
