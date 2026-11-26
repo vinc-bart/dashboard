@@ -13,7 +13,8 @@
     "test:e2e": "playwright test",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:seed-demo": "node scripts/seed-admin-demo.mjs"
+    "db:seed-demo": "node scripts/seed-admin-demo.mjs",
+    "db:dev-login": "node --env-file=.env.local scripts/dev-login.mjs"
   },
   "dependencies": {
     "@libsql/client": "^0.18.0",
