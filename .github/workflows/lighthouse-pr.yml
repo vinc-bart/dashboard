@@ -31,7 +31,7 @@ jobs:
         run: |
           pnpm start &
           for i in $(seq 1 60); do
-            if curl -sf http://localhost:3000/fr >/dev/null; then
+            if curl -sf http://localhost:3000/api/health >/dev/null; then
               exit 0
             fi
             sleep 2
