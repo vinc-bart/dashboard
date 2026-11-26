@@ -32,6 +32,7 @@
   "Nav": {
     "overview": "Overview",
     "montreuil": "Montreuil",
+    "transports": "Transit",
     "velib": "Vélib’",
     "nature": "Nature",
     "air": "Air",
@@ -237,6 +238,10 @@
         "title": "Montreuil · Robespierre",
         "body": "Vélib’, trees, gardens, fountains and the rue Étienne Marcel counter."
       },
+      "transports": {
+        "title": "Transit",
+        "body": "Next line 9 departures, Paris and Montreuil."
+      },
       "velib": {
         "title": "Vélib’",
         "body": "Real-time station availability."
@@ -372,7 +377,26 @@
       "kpiGardens": "Gardens / nature",
       "kpiEvents": "Agenda 93100",
       "bikeSource": "Fixed counter on rue Étienne Marcel (towards Paris / Croix de Chavaux). Source: <link>Montreuil Data</link>.",
+      "departuresTitle": "Next departures",
+      "departuresLink": "Line 9",
       "body": "West neighbourhood: Robespierre metro, place de la République and rue Étienne Marcel. Data from the City of Montreuil, Vélib’ Métropole, Que faire à Paris and Île-de-France Mobilités."
+    },
+    "transports": {
+      "title": "Transit",
+      "body": "Next line 9 departures, from Porte de Montreuil to Mairie de Montreuil.",
+      "sourceTitle": "Île-de-France Mobilités",
+      "stops": "Stops",
+      "next": "Next departure",
+      "realtime": "Live",
+      "realtimeHint": "{count} of {total}",
+      "line": "Line",
+      "direction": "Direction",
+      "time": "Time",
+      "freshness": "Tracking",
+      "live": "Live",
+      "scheduled": "Scheduled",
+      "empty": "No departures announced.",
+      "refreshError": "Times could not be refreshed."
     },
     "alerts": {
       "title": "Alerts",

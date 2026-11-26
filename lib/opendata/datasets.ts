@@ -417,6 +417,7 @@ export function datasetKeyById(datasetId: string): DatasetKey | undefined {
 export const NAV_ITEMS = [
   { href: "/dashboard", id: "overview" },
   { href: "/dashboard/montreuil", id: "montreuil" },
+  { href: "/dashboard/transports", id: "transports" },
   { href: "/dashboard/velib", id: "velib" },
   { href: "/dashboard/nature", id: "nature" },
   { href: "/dashboard/air", id: "air" },

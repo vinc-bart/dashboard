@@ -32,6 +32,7 @@
   "Nav": {
     "overview": "Vue d’ensemble",
     "montreuil": "Montreuil",
+    "transports": "Transports",
     "velib": "Vélib’",
     "nature": "Nature",
     "air": "Air",
@@ -237,6 +238,10 @@
         "title": "Montreuil · Robespierre",
         "body": "Vélib’, arbres, jardins, fontaines et compteur rue Étienne Marcel."
       },
+      "transports": {
+        "title": "Transports",
+        "body": "Prochains passages de la ligne 9, Paris et Montreuil."
+      },
       "velib": {
         "title": "Vélib’",
         "body": "Disponibilité temps réel des stations."
@@ -372,7 +377,26 @@
       "kpiGardens": "Jardins / nature",
       "kpiEvents": "Agenda 93100",
       "bikeSource": "Compteur fixe rue Étienne Marcel (sens Paris / Croix de Chavaux). Source : <link>Montreuil Data</link>.",
+      "departuresTitle": "Prochains passages",
+      "departuresLink": "Ligne 9",
       "body": "Quartier ouest : métro Robespierre, place de la République et rue Étienne Marcel. Données Ville de Montreuil, Vélib’ Métropole, Que faire à Paris et Île-de-France Mobilités."
+    },
+    "transports": {
+      "title": "Transports",
+      "body": "Prochains passages de la ligne 9, de Porte de Montreuil à Mairie de Montreuil.",
+      "sourceTitle": "Île-de-France Mobilités",
+      "stops": "Arrêts",
+      "next": "Prochain passage",
+      "realtime": "Temps réel",
+      "realtimeHint": "{count} sur {total}",
+      "line": "Ligne",
+      "direction": "Direction",
+      "time": "Horaire",
+      "freshness": "Suivi",
+      "live": "Temps réel",
+      "scheduled": "Théorique",
+      "empty": "Aucun passage annoncé.",
+      "refreshError": "Les horaires n’ont pas pu être actualisés."
     },
     "alerts": {
       "title": "Alertes",

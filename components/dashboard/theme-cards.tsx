@@ -2,6 +2,7 @@
 
 import {
   Bike,
+  Bus,
   CalendarDays,
   Droplets,
   Landmark,
@@ -19,6 +20,7 @@ import { SectionTitle } from "@/components/ui/heading";
 
 const ICONS: Record<string, LucideIcon> = {
   montreuil: Landmark,
+  transports: Bus,
   velib: Bike,
   nature: Trees,
   air: Wind,

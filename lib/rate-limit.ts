@@ -33,6 +33,7 @@ export function createRateLimiter(options: {
   };
 }
 
+export const idfmDeparturesLimit = createRateLimiter({ max: 30, windowMs: 60_000 });
 export const opendataRecordsLimit = createRateLimiter({ max: 60, windowMs: 60_000 });
 export const opendataThemeLimit = createRateLimiter({ max: 30, windowMs: 60_000 });
 export const opendataSearchLimit = createRateLimiter({ max: 40, windowMs: 60_000 });

@@ -14,20 +14,25 @@ export async function PageIntro({
   title,
   children,
   dataset,
+  source,
 }: Readonly<{
   title: string;
   children: ReactNode;
   dataset?: DatasetConfig | DatasetConfig[];
+  source?: { href: string; title: string };
 }>) {
   const t = await getTranslations("Common");
   const datasets = datasetsFromProp(dataset);
-  const sources = await Promise.all(
-    datasets.map(async (item) => ({
-      id: item.id,
-      sourceUrl: item.sourceUrl,
-      title: await localizeDatasetTitle(item),
-    })),
-  );
+  const sources = [
+    ...(await Promise.all(
+      datasets.map(async (item) => ({
+        id: item.id,
+        sourceUrl: item.sourceUrl,
+        title: await localizeDatasetTitle(item),
+      })),
+    )),
+    ...(source ? [{ id: source.href, sourceUrl: source.href, title: source.title }] : []),
+  ];
   return (
     <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div>

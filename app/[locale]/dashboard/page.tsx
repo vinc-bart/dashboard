@@ -17,6 +17,7 @@ import { requireSession } from "@/lib/session";
 
 const THEME_IDS = [
   "montreuil",
+  "transports",
   "velib",
   "nature",
   "air",
@@ -29,6 +30,7 @@ const THEME_IDS = [
 
 const THEME_HREF: Record<(typeof THEME_IDS)[number], string> = {
   montreuil: "/dashboard/montreuil",
+  transports: "/dashboard/transports",
   velib: "/dashboard/velib",
   nature: "/dashboard/nature",
   air: "/dashboard/air",
