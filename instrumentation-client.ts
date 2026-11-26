@@ -6,7 +6,7 @@ if (dsn) {
     dsn,
     tracesSampleRate: process.env.NODE_ENV === "development" ? 1.0 : 0.1,
     integrations: [Sentry.replayIntegration()],
-    replaysSessionSampleRate: 0.1,
+    replaysSessionSampleRate: 0.01,
     replaysOnErrorSampleRate: 1.0,
   });
 }

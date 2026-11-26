@@ -8,19 +8,19 @@ import { SectionTitle } from "@/components/ui/heading";
 import { Reveal, RevealItem, RevealList } from "@/components/ui/reveal";
 import { DatasetNotice } from "@/components/dashboard/dataset-notice";
 import { fetchAggregate, fetchCount, fetchRecordsSafe, formatCount } from "@/lib/opendata/client";
-import { DATASETS } from "@/lib/opendata/datasets";
+import { DATASETS, PUBLIC_LIVE_REVALIDATE } from "@/lib/opendata/datasets";
 
 export default async function Home() {
   const t = await getTranslations("Landing");
   const format = await getFormatter();
   const [velibCount, treeCount, eventCount, velibAgg, atmo] = await Promise.all([
-    fetchCount(DATASETS.velib.id, DATASETS.velib.revalidate),
+    fetchCount(DATASETS.velib.id, PUBLIC_LIVE_REVALIDATE),
     fetchCount(DATASETS.trees.id, DATASETS.trees.revalidate),
     fetchCount(DATASETS.events.id, DATASETS.events.revalidate),
     fetchAggregate<{ bikes?: number }>(
       DATASETS.velib.id,
       "sum(numbikesavailable) as bikes",
-      DATASETS.velib.revalidate,
+      PUBLIC_LIVE_REVALIDATE,
     ),
     fetchRecordsSafe<{
       annee?: string;

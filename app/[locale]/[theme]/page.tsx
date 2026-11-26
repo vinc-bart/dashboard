@@ -2,14 +2,13 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { DatasetNotice } from "@/components/dashboard/dataset-notice";
+import { PublicThemeCta } from "@/components/layout/public-theme-cta";
 import { SiteFooter, SiteHeader } from "@/components/layout/site-chrome";
-import { Button } from "@/components/ui/button";
 import { KpiCard } from "@/components/ui/card";
 import { PageTitle, SectionTitle } from "@/components/ui/heading";
 import { isAppLocale } from "@/i18n/routing";
 import { fetchAggregate, fetchCount, fetchRecordsSafe } from "@/lib/opendata/client";
-import { DATASETS } from "@/lib/opendata/datasets";
-import { getSession } from "@/lib/session";
+import { DATASETS, PUBLIC_LIVE_REVALIDATE } from "@/lib/opendata/datasets";
 import { fetchWikipediaSummary, type WikipediaSummary } from "@/lib/wikipedia/summary";
 import {
   isPublicTheme,
@@ -42,7 +41,7 @@ async function loadFacts(slug: PublicThemeSlug): Promise<ThemeFacts> {
     const aggregate = await fetchAggregate<{ bikes?: number }>(
       DATASETS.velib.id,
       "sum(numbikesavailable) as bikes",
-      DATASETS.velib.revalidate,
+      PUBLIC_LIVE_REVALIDATE,
     );
     return {
       ok: aggregate.ok,
@@ -129,7 +128,6 @@ export default async function PublicThemePage({
 
   const t = await getTranslations("PublicTheme");
   const format = await getFormatter();
-  const session = await getSession();
   const [facts, summaries] = await Promise.all([
     loadFacts(slug),
     Promise.all(
@@ -171,10 +169,7 @@ export default async function PublicThemePage({
           })}
         </div>
         <div className="mt-12">
-          <Button href={session ? theme.dashboardHref : "/signup"}>
-            {session ? t("openMap") : t("signup")}
-          </Button>
-          {session ? null : <p className="mt-3 text-sm text-muted">{t("signupHint")}</p>}
+          <PublicThemeCta dashboardHref={theme.dashboardHref} />
         </div>
       </main>
       <SiteFooter />

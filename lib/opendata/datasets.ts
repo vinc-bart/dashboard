@@ -1,5 +1,8 @@
 import type { DatasetConfig } from "./client";
 
+/** Public landing and theme figures. Dashboard Vélib’ stays on `DATASETS.velib.revalidate`. */
+export const PUBLIC_LIVE_REVALIDATE = 3600;
+
 export const PARIS_CENTER = { lat: 48.8566, lon: 2.3522 };
 export const PARIS_BBOX = {
   south: 48.815,
